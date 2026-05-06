@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conjugaciones en Contexto — Castellano</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --bg2: #f2ede5;
+    --bg3: #e8e1d6;
+    --bg4: #ddd5c8;
+    --border: #ccc4b8;
+    --border2: #b8ada0;
+    --amber: #c45820;
+    --amber2: #d97840;
+    --amber3: #f0a870;
+    --amber-dim: #a04418;
+    --red: #b83028;
+    --green: #3a7848;
+    --blue: #2858a0;
+    --text: #24180e;
+    --text2: #6a5040;
+    --text3: #9a8878;
+    --text-bright: #140c04;
+    --sidebar-w: 260px;
+    --radius: 4px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  #sidebar-header {
+    padding: 20px 18px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #sidebar-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  #sidebar-header p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+  }
+
+  #search-wrap {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 7px 10px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search::placeholder { color: var(--text3); }
+  #search:focus { border-color: var(--amber-dim); }
+
+  #filters {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .filter-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 2px 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .filter-btn:hover { border-color: var(--amber-dim); color: var(--amber); }
+  .filter-btn.active { background: var(--amber-dim); border-color: var(--amber); color: var(--amber3); }
+
+  #nav-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 8px 0;
+  }
+  #nav-list::-webkit-scrollbar { width: 4px; }
+  #nav-list::-webkit-scrollbar-track { background: transparent; }
+  #nav-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: var(--bg3); }
+  .nav-item.active {
+    background: var(--bg4);
+    border-left-color: var(--amber);
+  }
+
+  .nav-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-num { color: var(--amber); }
+
+  .nav-preview {
+    font-family: 'Crimson Pro', serif;
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+  }
+  .nav-item.active .nav-preview { color: var(--text); }
+
+  .nav-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: var(--bg4);
+    color: var(--amber-dim);
+    flex-shrink: 0;
+    border: 1px solid var(--border2);
+  }
+
+  #sidebar-footer {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  #counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-align: center;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 40px 48px;
+  }
+
+  #top-bar {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #top-bar h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-bright);
+    letter-spacing: 0.01em;
+  }
+
+  #toggle-btn {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+  #toggle-btn:hover { border-color: var(--amber-dim); color: var(--amber); }
+  #toggle-btn.hidden-mode { background: var(--amber-dim); border-color: var(--amber); color: var(--amber3); }
+
+  /* ── FRAGMENT CARD ── */
+  .fragment {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    animation: fadeIn 0.3s ease;
+  }
+  .fragment:hover { border-color: var(--border2); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fragment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .frag-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    min-width: 30px;
+  }
+
+  .situacion-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    padding: 2px 8px;
+    letter-spacing: 0.03em;
+    flex: 1;
+  }
+
+  .pattern-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: var(--bg4);
+    border: 1px solid var(--amber-dim);
+    color: var(--amber);
+    letter-spacing: 0.06em;
+  }
+
+  .fragment-sentence {
+    padding: 22px 24px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    line-height: 1.55;
+    color: var(--text-bright);
+    font-style: italic;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.01em;
+  }
+
+  .fragment-sentence strong {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--amber2);
+    font-size: 22px;
+  }
+
+  /* ── CONJUGATIONS ── */
+  .conjugations {
+    padding: 0;
+  }
+
+  .conj-block {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+  }
+  .conj-block:last-child { border-bottom: none; }
+
+  .conj-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .verb-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--amber2);
+    font-style: italic;
+  }
+
+  .tense-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 8px;
+  }
+
+  .conj-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .conj-cell {
+    background: var(--bg);
+    padding: 7px 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .pronoun {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    min-width: 72px;
+    flex-shrink: 0;
+  }
+
+  .form {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .conj-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    font-style: normal;
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+
+  /* ── HIDDEN MODE ── */
+  body.conjugations-hidden .conjugations {
+    display: none;
+  }
+  body.conjugations-hidden .reveal-btn {
+    display: flex;
+  }
+
+  .reveal-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .reveal-btn:hover { color: var(--amber); }
+  .reveal-btn::before { content: '▶'; font-size: 8px; }
+
+  /* ── NO RESULTS ── */
+  #no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── HEADER DECORATION ── */
+  .amber-line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+    margin-bottom: 3px;
+  }
+
+  /* ── MOBILE BAR ── */
+  #mobile-bar { display: none; }
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.45);
+    z-index: 90;
+  }
+
+  @media (max-width: 720px) {
+    #mobile-bar {
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 12px;
+      gap: 10px;
+      z-index: 110;
+    }
+
+    #hamburger {
+      background: none;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text2);
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    #hamburger:hover { border-color: var(--amber); color: var(--amber); }
+
+    #mobile-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.02em;
+    }
+
+    #toggle-btn-mobile {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text2);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      padding: 0;
+    }
+    #toggle-btn-mobile:hover { border-color: var(--amber-dim); color: var(--amber); }
+    #toggle-btn-mobile.hidden-mode { background: var(--amber-dim); border-color: var(--amber); color: var(--amber3); }
+
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      top: 52px;
+    }
+    body.sidebar-open #sidebar { transform: translateX(0); }
+    body.sidebar-open #overlay { display: block; }
+
+    #main {
+      margin-left: 0;
+      padding: 68px 16px 32px;
+    }
+
+    #toggle-btn { display: none; }
+
+    .conj-table {
+      grid-template-columns: 1fr;
+    }
+
+    .fragment-sentence {
+      font-size: 17px;
+      padding: 16px 16px 14px;
+    }
+
+    .fragment-header {
+      padding: 10px 16px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .conj-block { padding: 14px 16px; }
+
+    .conj-header { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE BAR -->
+<div id="mobile-bar">
+  <button id="hamburger" onclick="toggleSidebar()">☰</button>
+  <span id="mobile-title">Conjugaciones en Contexto</span>
+  <button id="toggle-btn-mobile" onclick="toggleConjugations()" aria-label="Ocultar conjugaciones"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+</div>
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <div class="amber-line"></div>
+    <h1>Conjugaciones<br>en Contexto</h1>
+    <p>Castellano · 145 fragmentos</p>
+  </div>
+  <div id="search-wrap">
+    <input type="text" id="search" placeholder="Buscar verbo o situación…">
+  </div>
+  <div id="filters">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="p1">P1 Hipotético</button>
+    <button class="filter-btn" data-filter="p2">P2 Pasado irreal</button>
+    <button class="filter-btn" data-filter="p3">P3 Mixto</button>
+    <button class="filter-btn" data-filter="p4">P4 Ojalá pres.</button>
+    <button class="filter-btn" data-filter="p5">P5 Ojalá pas.</button>
+    <button class="filter-btn" data-filter="p6">P6 Como si</button>
+    <button class="filter-btn" data-filter="p7">P7 Aunque</button>
+    <button class="filter-btn" data-filter="p8">P8 Debería/habría</button>
+  </div>
+  <div id="nav-list"></div>
+  <div id="sidebar-footer">
+    <button id="toggle-btn" onclick="toggleConjugations()">Ocultar conjugaciones</button>
+    <div id="counter">145 fragmentos visibles</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="top-bar">
+    <h2>Práctica de Conjugación</h2>
+  </div>
+  <div id="fragments-container"></div>
+  <div id="no-results">— sin resultados —</div>
+</div>
+
+<script>
+const FRAGS = [
+  {
+    id: "001",
+    situacion: "Hablando del día con un amigo",
+    sentence: `Hoy <strong>he estado</strong> todo el día en casa porque <strong>tenía</strong> un poco de fiebre.`,
+    verbs: [
+      {
+        verb: "he estado", tense: "Pretérito perfecto compuesto", infinitive: "estar",
+        forms: [["yo","he estado"],["tú","has estado"],["él/ella","ha estado"],["nosotros","hemos estado"],["vosotros","habéis estado"],["ellos/ellas","han estado"]]
+      },
+      {
+        verb: "tenía", tense: "Pretérito imperfecto de indicativo", infinitive: "tener",
+        forms: [["yo","tenía"],["tú","tenías"],["él/ella","tenía"],["nosotros","teníamos"],["vosotros","teníais"],["ellos/ellas","tenían"]]
+      }
+    ]
+  },
+  {
+    id: "002",
+    situacion: "Quedando con un amigo",
+    sentence: `¿<strong>Quedamos</strong> esta tarde o <strong>tienes</strong> algo que <strong>hacer</strong>?`,
+    verbs: [
+      {
+        verb: "quedamos", tense: "Presente de indicativo", infinitive: "quedar",
+        forms: [["yo","quedo"],["tú","quedas"],["él/ella","queda"],["nosotros","quedamos"],["vosotros","quedáis"],["ellos/ellas","quedan"]]
+      },
+      {
+        verb: "tienes", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      },
+      {
+        verb: "hacer", tense: "Infinitivo", infinitive: "hacer", note: "Usado como infinitivo tras «que».", forms: []
+      }
+    ]
+  },
+  {
+    id: "003",
+    situacion: "En el médico",
+    sentence: `Doctor, <strong>llevo</strong> tres días con dolor de cabeza y esta mañana <strong>he vomitado</strong> dos veces.`,
+    verbs: [
+      {
+        verb: "llevo", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      },
+      {
+        verb: "he vomitado", tense: "Pretérito perfecto compuesto", infinitive: "vomitar",
+        forms: [["yo","he vomitado"],["tú","has vomitado"],["él/ella","ha vomitado"],["nosotros","hemos vomitado"],["vosotros","habéis vomitado"],["ellos/ellas","han vomitado"]]
+      }
+    ]
+  },
+  {
+    id: "004",
+    situacion: "En una tienda, buscando algo que viste",
+    sentence: `Ayer <strong>vi</strong> unos zapatos en el escaparate y ahora no los <strong>encuentro</strong> por ningún sitio.`,
+    verbs: [
+      {
+        verb: "vi", tense: "Pretérito indefinido", infinitive: "ver",
+        forms: [["yo","vi"],["tú","viste"],["él/ella","vio"],["nosotros","vimos"],["vosotros","visteis"],["ellos/ellas","vieron"]]
+      },
+      {
+        verb: "encuentro", tense: "Presente de indicativo", infinitive: "encontrar",
+        forms: [["yo","encuentro"],["tú","encuentras"],["él/ella","encuentra"],["nosotros","encontramos"],["vosotros","encontráis"],["ellos/ellas","encuentran"]]
+      }
+    ]
+  },
+  {
+    id: "005",
+    situacion: "En la peluquería",
+    sentence: `<strong>Quiero</strong> que me <strong>dejéis</strong> el flequillo un poco más largo que la última vez.`,
+    verbs: [
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      },
+      {
+        verb: "dejéis", tense: "Presente de subjuntivo", infinitive: "dejar",
+        forms: [["yo","deje"],["tú","dejes"],["él/ella","deje"],["nosotros","dejemos"],["vosotros","dejéis"],["ellos/ellas","dejen"]]
+      }
+    ]
+  },
+  {
+    id: "006",
+    situacion: "Contando un viaje a un amigo",
+    sentence: `El verano pasado <strong>fuimos</strong> a Lisboa y <strong>nos quedamos</strong> una semana entera.`,
+    verbs: [
+      {
+        verb: "fuimos", tense: "Pretérito indefinido", infinitive: "ir",
+        forms: [["yo","fui"],["tú","fuiste"],["él/ella","fue"],["nosotros","fuimos"],["vosotros","fuisteis"],["ellos/ellas","fueron"]]
+      },
+      {
+        verb: "nos quedamos", tense: "Pretérito indefinido", infinitive: "quedarse",
+        forms: [["yo","me quedé"],["tú","te quedaste"],["él/ella","se quedó"],["nosotros","nos quedamos"],["vosotros","os quedasteis"],["ellos/ellas","se quedaron"]]
+      }
+    ]
+  },
+  {
+    id: "007",
+    situacion: "Haciendo planes",
+    sentence: `Si <strong>hace</strong> buen tiempo el finde, <strong>podríamos</strong> ir a la sierra.`,
+    verbs: [
+      {
+        verb: "hace", tense: "Presente de indicativo", infinitive: "hacer",
+        forms: [["yo","hago"],["tú","haces"],["él/ella","hace"],["nosotros","hacemos"],["vosotros","hacéis"],["ellos/ellas","hacen"]]
+      },
+      {
+        verb: "podríamos", tense: "Condicional simple", infinitive: "poder",
+        forms: [["yo","podría"],["tú","podrías"],["él/ella","podría"],["nosotros","podríamos"],["vosotros","podríais"],["ellos/ellas","podrían"]]
+      }
+    ]
+  },
+  {
+    id: "008",
+    situacion: "Explicando síntomas al médico",
+    sentence: `Me <strong>duele</strong> mucho la garganta desde ayer y <strong>tengo</strong> dificultad para <strong>tragar</strong>.`,
+    verbs: [
+      {
+        verb: "duele", tense: "Presente de indicativo", infinitive: "doler",
+        forms: [["yo","duelo"],["tú","dueles"],["él/ella","duele"],["nosotros","dolemos"],["vosotros","doléis"],["ellos/ellas","duelen"]]
+      },
+      {
+        verb: "tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      },
+      {
+        verb: "tragar", tense: "Infinitivo", infinitive: "tragar", note: "Usado como infinitivo tras «para».", forms: []
+      }
+    ]
+  },
+  {
+    id: "009",
+    situacion: "Hablando de una película",
+    sentence: `La película que <strong>vimos</strong> el otro día <strong>era</strong> buenísima, ¿no?`,
+    verbs: [
+      {
+        verb: "vimos", tense: "Pretérito indefinido", infinitive: "ver",
+        forms: [["yo","vi"],["tú","viste"],["él/ella","vio"],["nosotros","vimos"],["vosotros","visteis"],["ellos/ellas","vieron"]]
+      },
+      {
+        verb: "era", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      }
+    ]
+  },
+  {
+    id: "010",
+    situacion: "Pidiendo a alguien que avise",
+    sentence: `<strong>Llámame</strong> cuando <strong>llegues</strong>, que <strong>estoy</strong> un poco preocupada.`,
+    verbs: [
+      {
+        verb: "llámame", tense: "Imperativo afirmativo", infinitive: "llamar",
+        forms: [["tú","llama"],["vosotros","llamad"]]
+      },
+      {
+        verb: "llegues", tense: "Presente de subjuntivo", infinitive: "llegar",
+        forms: [["yo","llegue"],["tú","llegues"],["él/ella","llegue"],["nosotros","lleguemos"],["vosotros","lleguéis"],["ellos/ellas","lleguen"]]
+      },
+      {
+        verb: "estoy", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      }
+    ]
+  },
+  {
+    id: "011",
+    situacion: "Contando la mañana a un amigo",
+    sentence: `Esta mañana <strong>he perdido</strong> el metro y <strong>he llegado</strong> tarde al trabajo.`,
+    verbs: [
+      {
+        verb: "he perdido", tense: "Pretérito perfecto compuesto", infinitive: "perder",
+        forms: [["yo","he perdido"],["tú","has perdido"],["él/ella","ha perdido"],["nosotros","hemos perdido"],["vosotros","habéis perdido"],["ellos/ellas","han perdido"]]
+      },
+      {
+        verb: "he llegado", tense: "Pretérito perfecto compuesto", infinitive: "llegar",
+        forms: [["yo","he llegado"],["tú","has llegado"],["él/ella","ha llegado"],["nosotros","hemos llegado"],["vosotros","habéis llegado"],["ellos/ellas","han llegado"]]
+      }
+    ]
+  },
+  {
+    id: "012",
+    situacion: "En una cafetería, pidiendo",
+    sentence: `<strong>Ponme</strong> un cortado y una tostada con tomate, si no <strong>es</strong> mucha molestia.`,
+    verbs: [
+      {
+        verb: "ponme", tense: "Imperativo afirmativo", infinitive: "poner",
+        forms: [["tú","pon"],["vosotros","poned"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "013",
+    situacion: "Describiendo el barrio",
+    sentence: `Antes el barrio <strong>era</strong> muy tranquilo, pero ahora <strong>hay</strong> demasiado ruido por las noches.`,
+    verbs: [
+      {
+        verb: "era", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      },
+      {
+        verb: "hay", tense: "Presente de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal. Solo existe en 3.ª persona singular.", forms: [["(impersonal)","hay"]]
+      }
+    ]
+  },
+  {
+    id: "014",
+    situacion: "Hablando de planes de viaje",
+    sentence: `El mes que viene <strong>vamos</strong> a <strong>recorrer</strong> el norte de España en coche.`,
+    verbs: [
+      {
+        verb: "vamos", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "recorrer", tense: "Infinitivo", infinitive: "recorrer", note: "Perífrasis ir a + infinitivo.", forms: []
+      }
+    ]
+  },
+  {
+    id: "015",
+    situacion: "Hablando de un hábito del pasado",
+    sentence: `Cuando <strong>éramos</strong> pequeños, <strong>íbamos</strong> todos los veranos al pueblo de mis abuelos.`,
+    verbs: [
+      {
+        verb: "éramos", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      },
+      {
+        verb: "íbamos", tense: "Pretérito imperfecto de indicativo", infinitive: "ir",
+        forms: [["yo","iba"],["tú","ibas"],["él/ella","iba"],["nosotros","íbamos"],["vosotros","ibais"],["ellos/ellas","iban"]]
+      }
+    ]
+  },
+  {
+    id: "016",
+    situacion: "En la peluquería",
+    sentence: `Me <strong>gustaría</strong> que me <strong>cortaseis</strong> solo las puntas, porque <strong>quiero</strong> dejarlo crecer.`,
+    verbs: [
+      {
+        verb: "gustaría", tense: "Condicional simple", infinitive: "gustar",
+        forms: [["yo","gustaría"],["tú","gustarías"],["él/ella","gustaría"],["nosotros","gustaríamos"],["vosotros","gustaríais"],["ellos/ellas","gustarían"]]
+      },
+      {
+        verb: "cortaseis", tense: "Pretérito imperfecto de subjuntivo (-se)", infinitive: "cortar",
+        forms: [["yo","cortase"],["tú","cortases"],["él/ella","cortase"],["nosotros","cortásemos"],["vosotros","cortaseis"],["ellos/ellas","cortasen"]]
+      },
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      }
+    ]
+  },
+  {
+    id: "017",
+    situacion: "Quejándose del calor",
+    sentence: `Hoy <strong>está</strong> haciendo un calor horrible, no <strong>sé</strong> cómo la gente <strong>puede</strong> salir a la calle.`,
+    verbs: [
+      {
+        verb: "está", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "puede", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      }
+    ]
+  },
+  {
+    id: "018",
+    situacion: "Contando algo que salió mal",
+    sentence: `Cuando <strong>llegué</strong> al aeropuerto, <strong>me di cuenta</strong> de que <strong>había olvidado</strong> el pasaporte en casa.`,
+    verbs: [
+      {
+        verb: "llegué", tense: "Pretérito indefinido", infinitive: "llegar",
+        forms: [["yo","llegué"],["tú","llegaste"],["él/ella","llegó"],["nosotros","llegamos"],["vosotros","llegasteis"],["ellos/ellas","llegaron"]]
+      },
+      {
+        verb: "me di cuenta", tense: "Pretérito indefinido", infinitive: "darse cuenta",
+        forms: [["yo","me di cuenta"],["tú","te diste cuenta"],["él/ella","se dio cuenta"],["nosotros","nos dimos cuenta"],["vosotros","os disteis cuenta"],["ellos/ellas","se dieron cuenta"]]
+      },
+      {
+        verb: "había olvidado", tense: "Pretérito pluscuamperfecto de indicativo", infinitive: "olvidar",
+        forms: [["yo","había olvidado"],["tú","habías olvidado"],["él/ella","había olvidado"],["nosotros","habíamos olvidado"],["vosotros","habíais olvidado"],["ellos/ellas","habían olvidado"]]
+      }
+    ]
+  },
+  {
+    id: "019",
+    situacion: "Pidiendo un favor",
+    sentence: `¿<strong>Puedes</strong> echarme una mano con esto? <strong>Es</strong> que no <strong>entiendo</strong> nada.`,
+    verbs: [
+      {
+        verb: "puedes", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "entiendo", tense: "Presente de indicativo", infinitive: "entender",
+        forms: [["yo","entiendo"],["tú","entiendes"],["él/ella","entiende"],["nosotros","entendemos"],["vosotros","entendéis"],["ellos/ellas","entienden"]]
+      }
+    ]
+  },
+  {
+    id: "020",
+    situacion: "Lamentando algo del pasado",
+    sentence: `Ojalá <strong>hubiera estudiado</strong> más cuando <strong>era</strong> joven.`,
+    verbs: [
+      {
+        verb: "hubiera estudiado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "estudiar",
+        forms: [["yo","hubiera estudiado"],["tú","hubieras estudiado"],["él/ella","hubiera estudiado"],["nosotros","hubiéramos estudiado"],["vosotros","hubierais estudiado"],["ellos/ellas","hubieran estudiado"]]
+      },
+      {
+        verb: "era", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      }
+    ]
+  },
+  {
+    id: "021",
+    situacion: "En una tienda, pidiendo ayuda",
+    sentence: `Disculpe, <strong>estaba buscando</strong> unas botas de montaña que <strong>vi</strong> en vuestra web, ¿las <strong>tenéis</strong> en tienda?`,
+    verbs: [
+      {
+        verb: "estaba buscando", tense: "Pretérito imperfecto de indicativo + gerundio", infinitive: "buscar",
+        forms: [["yo","estaba buscando"],["tú","estabas buscando"],["él/ella","estaba buscando"],["nosotros","estábamos buscando"],["vosotros","estabais buscando"],["ellos/ellas","estaban buscando"]]
+      },
+      {
+        verb: "vi", tense: "Pretérito indefinido", infinitive: "ver",
+        forms: [["yo","vi"],["tú","viste"],["él/ella","vio"],["nosotros","vimos"],["vosotros","visteis"],["ellos/ellas","vieron"]]
+      },
+      {
+        verb: "tenéis", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "022",
+    situacion: "Hablando del estrés laboral",
+    sentence: `Últimamente <strong>estoy trabajando</strong> muchísimo y no <strong>tengo</strong> tiempo para nada.`,
+    verbs: [
+      {
+        verb: "estoy trabajando", tense: "Presente de indicativo + gerundio", infinitive: "trabajar",
+        forms: [["yo","estoy trabajando"],["tú","estás trabajando"],["él/ella","está trabajando"],["nosotros","estamos trabajando"],["vosotros","estáis trabajando"],["ellos/ellas","están trabajando"]]
+      },
+      {
+        verb: "tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "023",
+    situacion: "Conversación hipotética",
+    sentence: `Si <strong>tuviera</strong> más dinero, <strong>me compraría</strong> un piso en el centro.`,
+    verbs: [
+      {
+        verb: "tuviera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "tener",
+        forms: [["yo","tuviera"],["tú","tuvieras"],["él/ella","tuviera"],["nosotros","tuviéramos"],["vosotros","tuvierais"],["ellos/ellas","tuvieran"]]
+      },
+      {
+        verb: "me compraría", tense: "Condicional simple", infinitive: "comprarse",
+        forms: [["yo","me compraría"],["tú","te comprarías"],["él/ella","se compraría"],["nosotros","nos compraríamos"],["vosotros","os compraríais"],["ellos/ellas","se comprarían"]]
+      }
+    ]
+  },
+  {
+    id: "024",
+    situacion: "En el médico — registro formal (usted)",
+    sentence: `Doctor, <strong>quisiera</strong> preguntarle si <strong>es</strong> normal que me <strong>duela</strong> tanto la rodilla al bajar escaleras.`,
+    verbs: [
+      {
+        verb: "quisiera", tense: "Pretérito imperfecto de subjuntivo (-ra) — solicitud cortés", infinitive: "querer",
+        forms: [["yo","quisiera"],["tú","quisieras"],["él/ella","quisiera"],["nosotros","quisiéramos"],["vosotros","quisierais"],["ellos/ellas","quisieran"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "duela", tense: "Presente de subjuntivo", infinitive: "doler",
+        forms: [["yo","duela"],["tú","duelas"],["él/ella","duela"],["nosotros","dolamos"],["vosotros","doláis"],["ellos/ellas","duelan"]]
+      }
+    ]
+  },
+  {
+    id: "025",
+    situacion: "Describiendo lo que hacías cuando algo pasó",
+    sentence: `<strong>Estaba</strong> duchándome cuando <strong>sonó</strong> el teléfono.`,
+    verbs: [
+      {
+        verb: "estaba duchándome", tense: "Pretérito imperfecto de indicativo + gerundio", infinitive: "ducharse",
+        forms: [["yo","estaba duchándome"],["tú","estabas duchándote"],["él/ella","estaba duchándose"],["nosotros","estábamos duchándonos"],["vosotros","estabais duchándoos"],["ellos/ellas","estaban duchándose"]]
+      },
+      {
+        verb: "sonó", tense: "Pretérito indefinido", infinitive: "sonar",
+        forms: [["yo","soné"],["tú","sonaste"],["él/ella","sonó"],["nosotros","sonamos"],["vosotros","sonasteis"],["ellos/ellas","sonaron"]]
+      }
+    ]
+  },
+  {
+    id: "026",
+    situacion: "Hablando de planes futuros",
+    sentence: `En cuanto <strong>termine</strong> el proyecto, <strong>me voy</strong> a <strong>tomar</strong> unos días de vacaciones.`,
+    verbs: [
+      {
+        verb: "termine", tense: "Presente de subjuntivo", infinitive: "terminar",
+        forms: [["yo","termine"],["tú","termines"],["él/ella","termine"],["nosotros","terminemos"],["vosotros","terminéis"],["ellos/ellas","terminen"]]
+      },
+      {
+        verb: "me voy a tomar", tense: "Presente de indicativo + infinitivo (ir a + inf.)", infinitive: "tomarse",
+        forms: [["yo","me voy a tomar"],["tú","te vas a tomar"],["él/ella","se va a tomar"],["nosotros","nos vamos a tomar"],["vosotros","os vais a tomar"],["ellos/ellas","se van a tomar"]]
+      }
+    ]
+  },
+  {
+    id: "027",
+    situacion: "Recomendando un restaurante",
+    sentence: `<strong>Tienes</strong> que <strong>ir</strong> a ese restaurante, <strong>es</strong> que la comida <strong>está</strong> de vicio.`,
+    verbs: [
+      {
+        verb: "tienes", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "está", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      }
+    ]
+  },
+  {
+    id: "028",
+    situacion: "Contando lo que hizo alguien",
+    sentence: `Mi jefe me <strong>llamó</strong> ayer para decirme que <strong>había</strong> un problema con el informe.`,
+    verbs: [
+      {
+        verb: "llamó", tense: "Pretérito indefinido", infinitive: "llamar",
+        forms: [["yo","llamé"],["tú","llamaste"],["él/ella","llamó"],["nosotros","llamamos"],["vosotros","llamasteis"],["ellos/ellas","llamaron"]]
+      },
+      {
+        verb: "había", tense: "Pretérito imperfecto de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal.", forms: [["(impersonal)","había"]]
+      }
+    ]
+  },
+  {
+    id: "029",
+    situacion: "Negociando en una tienda — usted",
+    sentence: `Mire, si me <strong>hace</strong> un pequeño descuento, <strong>me lo llevo</strong> hoy mismo.`,
+    verbs: [
+      {
+        verb: "hace", tense: "Presente de indicativo", infinitive: "hacer",
+        forms: [["yo","hago"],["tú","haces"],["él/ella","hace"],["nosotros","hacemos"],["vosotros","hacéis"],["ellos/ellas","hacen"]]
+      },
+      {
+        verb: "me lo llevo", tense: "Presente de indicativo", infinitive: "llevarse",
+        forms: [["yo","me lo llevo"],["tú","te lo llevas"],["él/ella","se lo lleva"],["nosotros","nos lo llevamos"],["vosotros","os lo lleváis"],["ellos/ellas","se lo llevan"]]
+      }
+    ]
+  },
+  {
+    id: "030",
+    situacion: "Contando un malentendido",
+    sentence: `Al principio <strong>pensaba</strong> que <strong>era</strong> una broma, pero luego <strong>me di</strong> cuenta de que <strong>iba</strong> en serio.`,
+    verbs: [
+      {
+        verb: "pensaba", tense: "Pretérito imperfecto de indicativo", infinitive: "pensar",
+        forms: [["yo","pensaba"],["tú","pensabas"],["él/ella","pensaba"],["nosotros","pensábamos"],["vosotros","pensabais"],["ellos/ellas","pensaban"]]
+      },
+      {
+        verb: "era", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      },
+      {
+        verb: "me di", tense: "Pretérito indefinido", infinitive: "darse",
+        forms: [["yo","me di"],["tú","te diste"],["él/ella","se dio"],["nosotros","nos dimos"],["vosotros","os disteis"],["ellos/ellas","se dieron"]]
+      },
+      {
+        verb: "iba", tense: "Pretérito imperfecto de indicativo", infinitive: "ir",
+        forms: [["yo","iba"],["tú","ibas"],["él/ella","iba"],["nosotros","íbamos"],["vosotros","ibais"],["ellos/ellas","iban"]]
+      }
+    ]
+  },
+  {
+    id: "031",
+    situacion: "Hablando de una decisión tomada",
+    sentence: `Al final <strong>decidí</strong> no aceptar el trabajo porque el sueldo no <strong>merecía</strong> la pena.`,
+    verbs: [
+      {
+        verb: "decidí", tense: "Pretérito indefinido", infinitive: "decidir",
+        forms: [["yo","decidí"],["tú","decidiste"],["él/ella","decidió"],["nosotros","decidimos"],["vosotros","decidisteis"],["ellos/ellas","decidieron"]]
+      },
+      {
+        verb: "merecía", tense: "Pretérito imperfecto de indicativo", infinitive: "merecer",
+        forms: [["yo","merecía"],["tú","merecías"],["él/ella","merecía"],["nosotros","merecíamos"],["vosotros","merecíais"],["ellos/ellas","merecían"]]
+      }
+    ]
+  },
+  {
+    id: "032",
+    situacion: "Hablando de lo que habrías hecho",
+    sentence: `Si <strong>hubiera sabido</strong> que <strong>ibas</strong> a venir, <strong>habría preparado</strong> algo de cena.`,
+    verbs: [
+      {
+        verb: "hubiera sabido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "saber",
+        forms: [["yo","hubiera sabido"],["tú","hubieras sabido"],["él/ella","hubiera sabido"],["nosotros","hubiéramos sabido"],["vosotros","hubierais sabido"],["ellos/ellas","hubieran sabido"]]
+      },
+      {
+        verb: "ibas", tense: "Pretérito imperfecto de indicativo", infinitive: "ir",
+        forms: [["yo","iba"],["tú","ibas"],["él/ella","iba"],["nosotros","íbamos"],["vosotros","ibais"],["ellos/ellas","iban"]]
+      },
+      {
+        verb: "habría preparado", tense: "Condicional compuesto", infinitive: "preparar",
+        forms: [["yo","habría preparado"],["tú","habrías preparado"],["él/ella","habría preparado"],["nosotros","habríamos preparado"],["vosotros","habríais preparado"],["ellos/ellas","habrían preparado"]]
+      }
+    ]
+  },
+  {
+    id: "033",
+    situacion: "Dando instrucciones a un compañero de piso",
+    sentence: `<strong>Saca</strong> la basura cuando <strong>salgas</strong> y <strong>cierra</strong> bien la puerta, que últimamente <strong>se queda</strong> abierta.`,
+    verbs: [
+      {
+        verb: "saca", tense: "Imperativo afirmativo", infinitive: "sacar",
+        forms: [["tú","saca"],["vosotros","sacad"]]
+      },
+      {
+        verb: "salgas", tense: "Presente de subjuntivo", infinitive: "salir",
+        forms: [["yo","salga"],["tú","salgas"],["él/ella","salga"],["nosotros","salgamos"],["vosotros","salgáis"],["ellos/ellas","salgan"]]
+      },
+      {
+        verb: "cierra", tense: "Imperativo afirmativo", infinitive: "cerrar",
+        forms: [["tú","cierra"],["vosotros","cerrad"]]
+      },
+      {
+        verb: "se queda", tense: "Presente de indicativo", infinitive: "quedarse",
+        forms: [["yo","me quedo"],["tú","te quedas"],["él/ella","se queda"],["nosotros","nos quedamos"],["vosotros","os quedáis"],["ellos/ellas","se quedan"]]
+      }
+    ]
+  },
+  {
+    id: "034",
+    situacion: "Contando un viaje en tren",
+    sentence: `El tren <strong>salió</strong> con dos horas de retraso y <strong>llegamos</strong> a Madrid de madrugada, agotados.`,
+    verbs: [
+      {
+        verb: "salió", tense: "Pretérito indefinido", infinitive: "salir",
+        forms: [["yo","salí"],["tú","saliste"],["él/ella","salió"],["nosotros","salimos"],["vosotros","salisteis"],["ellos/ellas","salieron"]]
+      },
+      {
+        verb: "llegamos", tense: "Pretérito indefinido", infinitive: "llegar",
+        forms: [["yo","llegué"],["tú","llegaste"],["él/ella","llegó"],["nosotros","llegamos"],["vosotros","llegasteis"],["ellos/ellas","llegaron"]]
+      }
+    ]
+  },
+  {
+    id: "035",
+    situacion: "Contando lo que dijo el médico",
+    sentence: `El médico me <strong>dijo</strong> que <strong>descansara</strong> más y que no <strong>bebiera</strong> tanto café.`,
+    verbs: [
+      {
+        verb: "dijo", tense: "Pretérito indefinido", infinitive: "decir",
+        forms: [["yo","dije"],["tú","dijiste"],["él/ella","dijo"],["nosotros","dijimos"],["vosotros","dijisteis"],["ellos/ellas","dijeron"]]
+      },
+      {
+        verb: "descansara", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "descansar",
+        forms: [["yo","descansara"],["tú","descansaras"],["él/ella","descansara"],["nosotros","descansáramos"],["vosotros","descansarais"],["ellos/ellas","descansaran"]]
+      },
+      {
+        verb: "bebiera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "beber",
+        forms: [["yo","bebiera"],["tú","bebieras"],["él/ella","bebiera"],["nosotros","bebiéramos"],["vosotros","bebierais"],["ellos/ellas","bebieran"]]
+      }
+    ]
+  },
+  {
+    id: "036",
+    situacion: "Esperando el verano",
+    sentence: `No <strong>puedo</strong> esperar a que <strong>empiece</strong> el verano, <strong>necesito</strong> unas vacaciones ya.`,
+    verbs: [
+      {
+        verb: "puedo", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      },
+      {
+        verb: "empiece", tense: "Presente de subjuntivo", infinitive: "empezar",
+        forms: [["yo","empiece"],["tú","empieces"],["él/ella","empiece"],["nosotros","empecemos"],["vosotros","empecéis"],["ellos/ellas","empiecen"]]
+      },
+      {
+        verb: "necesito", tense: "Presente de indicativo", infinitive: "necesitar",
+        forms: [["yo","necesito"],["tú","necesitas"],["él/ella","necesita"],["nosotros","necesitamos"],["vosotros","necesitáis"],["ellos/ellas","necesitan"]]
+      }
+    ]
+  },
+  {
+    id: "037",
+    situacion: "Quejándose de un restaurante",
+    sentence: `El camarero <strong>tardó</strong> media hora en traernos la carta y la comida <strong>estaba</strong> fría.`,
+    verbs: [
+      {
+        verb: "tardó", tense: "Pretérito indefinido", infinitive: "tardar",
+        forms: [["yo","tardé"],["tú","tardaste"],["él/ella","tardó"],["nosotros","tardamos"],["vosotros","tardasteis"],["ellos/ellas","tardaron"]]
+      },
+      {
+        verb: "estaba", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      }
+    ]
+  },
+  {
+    id: "038",
+    situacion: "Contando lo que acabas de hacer",
+    sentence: `Acabo de hablar con mi madre y me <strong>ha dicho</strong> que <strong>viene</strong> este fin de semana.`,
+    verbs: [
+      {
+        verb: "ha dicho", tense: "Pretérito perfecto compuesto", infinitive: "decir",
+        forms: [["yo","he dicho"],["tú","has dicho"],["él/ella","ha dicho"],["nosotros","hemos dicho"],["vosotros","habéis dicho"],["ellos/ellas","han dicho"]]
+      },
+      {
+        verb: "viene", tense: "Presente de indicativo", infinitive: "venir",
+        forms: [["yo","vengo"],["tú","vienes"],["él/ella","viene"],["nosotros","venimos"],["vosotros","venís"],["ellos/ellas","vienen"]]
+      }
+    ]
+  },
+  {
+    id: "039",
+    situacion: "Buscando opinión",
+    sentence: `¿<strong>Crees</strong> que <strong>hice</strong> bien en decirle la verdad?`,
+    verbs: [
+      {
+        verb: "crees", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "hice", tense: "Pretérito indefinido", infinitive: "hacer",
+        forms: [["yo","hice"],["tú","hiciste"],["él/ella","hizo"],["nosotros","hicimos"],["vosotros","hicisteis"],["ellos/ellas","hicieron"]]
+      }
+    ]
+  },
+  {
+    id: "040",
+    situacion: "Haciendo una sugerencia",
+    sentence: `¿Y si <strong>quedamos</strong> el jueves y <strong>vamos</strong> a tomar algo por el centro?`,
+    verbs: [
+      {
+        verb: "quedamos", tense: "Presente de indicativo", infinitive: "quedar",
+        forms: [["yo","quedo"],["tú","quedas"],["él/ella","queda"],["nosotros","quedamos"],["vosotros","quedáis"],["ellos/ellas","quedan"]]
+      },
+      {
+        verb: "vamos", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      }
+    ]
+  },
+  {
+    id: "041",
+    situacion: "Describiendo cómo te sentiste",
+    sentence: `Cuando me <strong>enteré</strong> de lo que <strong>había pasado</strong>, no <strong>sabía</strong> qué decir.`,
+    verbs: [
+      {
+        verb: "enteré", tense: "Pretérito indefinido", infinitive: "enterarse",
+        forms: [["yo","me enteré"],["tú","te enteraste"],["él/ella","se enteró"],["nosotros","nos enteramos"],["vosotros","os enterasteis"],["ellos/ellas","se enteraron"]]
+      },
+      {
+        verb: "había pasado", tense: "Pretérito pluscuamperfecto de indicativo", infinitive: "pasar",
+        forms: [["yo","había pasado"],["tú","habías pasado"],["él/ella","había pasado"],["nosotros","habíamos pasado"],["vosotros","habíais pasado"],["ellos/ellas","habían pasado"]]
+      },
+      {
+        verb: "sabía", tense: "Pretérito imperfecto de indicativo", infinitive: "saber",
+        forms: [["yo","sabía"],["tú","sabías"],["él/ella","sabía"],["nosotros","sabíamos"],["vosotros","sabíais"],["ellos/ellas","sabían"]]
+      }
+    ]
+  },
+  {
+    id: "042",
+    situacion: "Tranquilizando a alguien",
+    sentence: `No <strong>te preocupes</strong>, seguro que <strong>sale</strong> bien. Ya <strong>verás</strong>.`,
+    verbs: [
+      {
+        verb: "te preocupes", tense: "Imperativo negativo / Presente de subjuntivo", infinitive: "preocuparse",
+        forms: [["yo","me preocupe"],["tú","te preocupes"],["él/ella","se preocupe"],["nosotros","nos preocupemos"],["vosotros","os preocupéis"],["ellos/ellas","se preocupen"]]
+      },
+      {
+        verb: "sale", tense: "Presente de indicativo", infinitive: "salir",
+        forms: [["yo","salgo"],["tú","sales"],["él/ella","sale"],["nosotros","salimos"],["vosotros","salís"],["ellos/ellas","salen"]]
+      },
+      {
+        verb: "verás", tense: "Futuro simple", infinitive: "ver",
+        forms: [["yo","veré"],["tú","verás"],["él/ella","verá"],["nosotros","veremos"],["vosotros","veréis"],["ellos/ellas","verán"]]
+      }
+    ]
+  },
+  {
+    id: "043",
+    situacion: "Describiendo una ciudad que visitaste",
+    sentence: `Bilbao me <strong>pareció</strong> una ciudad increíble. <strong>Tiene</strong> una energía que no <strong>había sentido</strong> en ningún otro sitio.`,
+    verbs: [
+      {
+        verb: "pareció", tense: "Pretérito indefinido", infinitive: "parecer",
+        forms: [["yo","parecí"],["tú","pareciste"],["él/ella","pareció"],["nosotros","parecimos"],["vosotros","parecisteis"],["ellos/ellas","parecieron"]]
+      },
+      {
+        verb: "tiene", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      },
+      {
+        verb: "había sentido", tense: "Pretérito pluscuamperfecto de indicativo", infinitive: "sentir",
+        forms: [["yo","había sentido"],["tú","habías sentido"],["él/ella","había sentido"],["nosotros","habíamos sentido"],["vosotros","habíais sentido"],["ellos/ellas","habían sentido"]]
+      }
+    ]
+  },
+  {
+    id: "044",
+    situacion: "Expresando duda",
+    sentence: `No <strong>creo</strong> que <strong>venga</strong> hoy, <strong>dijo</strong> que <strong>estaba</strong> muy liado.`,
+    verbs: [
+      {
+        verb: "creo", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "venga", tense: "Presente de subjuntivo", infinitive: "venir",
+        forms: [["yo","venga"],["tú","vengas"],["él/ella","venga"],["nosotros","vengamos"],["vosotros","vengáis"],["ellos/ellas","vengan"]]
+      },
+      {
+        verb: "dijo", tense: "Pretérito indefinido", infinitive: "decir",
+        forms: [["yo","dije"],["tú","dijiste"],["él/ella","dijo"],["nosotros","dijimos"],["vosotros","dijisteis"],["ellos/ellas","dijeron"]]
+      },
+      {
+        verb: "estaba", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      }
+    ]
+  },
+  {
+    id: "045",
+    situacion: "Planificando un viaje",
+    sentence: `<strong>Llevaremos</strong> el coche hasta Sevilla y desde allí <strong>cogeremos</strong> el AVE a Granada.`,
+    verbs: [
+      {
+        verb: "llevaremos", tense: "Futuro simple", infinitive: "llevar",
+        forms: [["yo","llevaré"],["tú","llevarás"],["él/ella","llevará"],["nosotros","llevaremos"],["vosotros","llevaréis"],["ellos/ellas","llevarán"]]
+      },
+      {
+        verb: "cogeremos", tense: "Futuro simple", infinitive: "coger",
+        forms: [["yo","cogeré"],["tú","cogerás"],["él/ella","cogerá"],["nosotros","cogeremos"],["vosotros","cogeréis"],["ellos/ellas","cogerán"]]
+      }
+    ]
+  },
+  {
+    id: "046",
+    situacion: "Lo que te contó un vecino",
+    sentence: `Mi vecina me <strong>ha contado</strong> que <strong>van a abrir</strong> un mercado nuevo en el barrio.`,
+    verbs: [
+      {
+        verb: "ha contado", tense: "Pretérito perfecto compuesto", infinitive: "contar",
+        forms: [["yo","he contado"],["tú","has contado"],["él/ella","ha contado"],["nosotros","hemos contado"],["vosotros","habéis contado"],["ellos/ellas","han contado"]]
+      },
+      {
+        verb: "van a abrir", tense: "Presente de indicativo + infinitivo (ir a + inf.)", infinitive: "abrir",
+        forms: [["yo","voy a abrir"],["tú","vas a abrir"],["él/ella","va a abrir"],["nosotros","vamos a abrir"],["vosotros","vais a abrir"],["ellos/ellas","van a abrir"]]
+      }
+    ]
+  },
+  {
+    id: "047",
+    situacion: "Hablando del cansancio",
+    sentence: `<strong>Llevo</strong> toda la semana durmiendo fatal. No <strong>sé</strong> qué me <strong>pasa</strong>.`,
+    verbs: [
+      {
+        verb: "llevo", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "pasa", tense: "Presente de indicativo", infinitive: "pasar",
+        forms: [["yo","paso"],["tú","pasas"],["él/ella","pasa"],["nosotros","pasamos"],["vosotros","pasáis"],["ellos/ellas","pasan"]]
+      }
+    ]
+  },
+  {
+    id: "048",
+    situacion: "Expresando sorpresa ante una noticia",
+    sentence: `¿En serio? No <strong>sabía</strong> que <strong>habías vivido</strong> en Londres. ¿Cuánto tiempo <strong>estuviste</strong>?`,
+    verbs: [
+      {
+        verb: "sabía", tense: "Pretérito imperfecto de indicativo", infinitive: "saber",
+        forms: [["yo","sabía"],["tú","sabías"],["él/ella","sabía"],["nosotros","sabíamos"],["vosotros","sabíais"],["ellos/ellas","sabían"]]
+      },
+      {
+        verb: "habías vivido", tense: "Pretérito pluscuamperfecto de indicativo", infinitive: "vivir",
+        forms: [["yo","había vivido"],["tú","habías vivido"],["él/ella","había vivido"],["nosotros","habíamos vivido"],["vosotros","habíais vivido"],["ellos/ellas","habían vivido"]]
+      },
+      {
+        verb: "estuviste", tense: "Pretérito indefinido", infinitive: "estar",
+        forms: [["yo","estuve"],["tú","estuviste"],["él/ella","estuvo"],["nosotros","estuvimos"],["vosotros","estuvisteis"],["ellos/ellas","estuvieron"]]
+      }
+    ]
+  },
+  {
+    id: "049",
+    situacion: "Pidiendo que alguien espere",
+    sentence: `<strong>Espera</strong>, que <strong>tengo</strong> que mandarle un mensaje antes de salir.`,
+    verbs: [
+      {
+        verb: "espera", tense: "Imperativo afirmativo", infinitive: "esperar",
+        forms: [["tú","espera"],["vosotros","esperad"]]
+      },
+      {
+        verb: "tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "050",
+    situacion: "Hablando del teletrabajo",
+    sentence: `Desde que <strong>empecé</strong> a trabajar desde casa, <strong>salgo</strong> mucho menos y <strong>echo</strong> de menos el contacto con la gente.`,
+    verbs: [
+      {
+        verb: "empecé", tense: "Pretérito indefinido", infinitive: "empezar",
+        forms: [["yo","empecé"],["tú","empezaste"],["él/ella","empezó"],["nosotros","empezamos"],["vosotros","empezasteis"],["ellos/ellas","empezaron"]]
+      },
+      {
+        verb: "salgo", tense: "Presente de indicativo", infinitive: "salir",
+        forms: [["yo","salgo"],["tú","sales"],["él/ella","sale"],["nosotros","salimos"],["vosotros","salís"],["ellos/ellas","salen"]]
+      },
+      {
+        verb: "echo", tense: "Presente de indicativo", infinitive: "echar",
+        forms: [["yo","echo"],["tú","echas"],["él/ella","echa"],["nosotros","echamos"],["vosotros","echáis"],["ellos/ellas","echan"]]
+      }
+    ]
+  },
+  {
+    id: "051",
+    situacion: "En la peluquería, pidiendo permiso",
+    sentence: `¿<strong>Os importa</strong> que <strong>traiga</strong> a mi hijo? <strong>Es</strong> que no tengo con quién dejarlo.`,
+    verbs: [
+      {
+        verb: "os importa", tense: "Presente de indicativo", infinitive: "importar",
+        note: "Verbo de afección — solo se conjuga en 3.ª persona.",
+        forms: [["(a mí)","me importa"],["(a ti)","te importa"],["(a él/ella)","le importa"],["(a nosotros)","nos importa"],["(a vosotros)","os importa"],["(a ellos)","les importa"]]
+      },
+      {
+        verb: "traiga", tense: "Presente de subjuntivo", infinitive: "traer",
+        forms: [["yo","traiga"],["tú","traigas"],["él/ella","traiga"],["nosotros","traigamos"],["vosotros","traigáis"],["ellos/ellas","traigan"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "052",
+    situacion: "Describiendo un concierto muy lleno",
+    sentence: `El concierto <strong>estuvo</strong> genial, pero <strong>había</strong> tantísima gente que apenas <strong>podíamos</strong> movernos.`,
+    verbs: [
+      {
+        verb: "estuvo", tense: "Pretérito indefinido", infinitive: "estar",
+        forms: [["yo","estuve"],["tú","estuviste"],["él/ella","estuvo"],["nosotros","estuvimos"],["vosotros","estuvisteis"],["ellos/ellas","estuvieron"]]
+      },
+      {
+        verb: "había", tense: "Pretérito imperfecto de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal.", forms: [["(impersonal)","había"]]
+      },
+      {
+        verb: "podíamos", tense: "Pretérito imperfecto de indicativo", infinitive: "poder",
+        forms: [["yo","podía"],["tú","podías"],["él/ella","podía"],["nosotros","podíamos"],["vosotros","podíais"],["ellos/ellas","podían"]]
+      }
+    ]
+  },
+  {
+    id: "053",
+    situacion: "Haciendo una petición educada",
+    sentence: `¿<strong>Podrías</strong> bajar un poco el volumen? <strong>Es</strong> que <strong>estoy intentando</strong> concentrarme.`,
+    verbs: [
+      {
+        verb: "podrías", tense: "Condicional simple", infinitive: "poder",
+        forms: [["yo","podría"],["tú","podrías"],["él/ella","podría"],["nosotros","podríamos"],["vosotros","podríais"],["ellos/ellas","podrían"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "estoy intentando", tense: "Presente de indicativo + gerundio", infinitive: "intentar",
+        forms: [["yo","estoy intentando"],["tú","estás intentando"],["él/ella","está intentando"],["nosotros","estamos intentando"],["vosotros","estáis intentando"],["ellos/ellas","están intentando"]]
+      }
+    ]
+  },
+  {
+    id: "054",
+    situacion: "Anécdota de vacaciones",
+    sentence: `Un día <strong>salimos</strong> a dar una vuelta y <strong>nos perdimos</strong> por las callejuelas del casco antiguo. <strong>Fue</strong> lo mejor del viaje.`,
+    verbs: [
+      {
+        verb: "salimos", tense: "Pretérito indefinido", infinitive: "salir",
+        forms: [["yo","salí"],["tú","saliste"],["él/ella","salió"],["nosotros","salimos"],["vosotros","salisteis"],["ellos/ellas","salieron"]]
+      },
+      {
+        verb: "nos perdimos", tense: "Pretérito indefinido", infinitive: "perderse",
+        forms: [["yo","me perdí"],["tú","te perdiste"],["él/ella","se perdió"],["nosotros","nos perdimos"],["vosotros","os perdisteis"],["ellos/ellas","se perdieron"]]
+      },
+      {
+        verb: "fue", tense: "Pretérito indefinido", infinitive: "ser",
+        forms: [["yo","fui"],["tú","fuiste"],["él/ella","fue"],["nosotros","fuimos"],["vosotros","fuisteis"],["ellos/ellas","fueron"]]
+      }
+    ]
+  },
+  {
+    id: "055",
+    situacion: "Preocupándose por un amigo",
+    sentence: `Me <strong>preocupa</strong> que no <strong>haya dado</strong> señales de vida desde el viernes.`,
+    verbs: [
+      {
+        verb: "preocupa", tense: "Presente de indicativo", infinitive: "preocupar",
+        forms: [["yo","preocupo"],["tú","preocupas"],["él/ella","preocupa"],["nosotros","preocupamos"],["vosotros","preocupáis"],["ellos/ellas","preocupan"]]
+      },
+      {
+        verb: "haya dado", tense: "Pretérito perfecto de subjuntivo", infinitive: "dar",
+        forms: [["yo","haya dado"],["tú","hayas dado"],["él/ella","haya dado"],["nosotros","hayamos dado"],["vosotros","hayáis dado"],["ellos/ellas","hayan dado"]]
+      }
+    ]
+  },
+  {
+    id: "056",
+    situacion: "Recuerdos de infancia",
+    sentence: `De pequeño <strong>soñaba</strong> con ser futbolista. Mis padres me <strong>compraron</strong> las primeras botas cuando <strong>tenía</strong> seis años.`,
+    verbs: [
+      {
+        verb: "soñaba", tense: "Pretérito imperfecto de indicativo", infinitive: "soñar",
+        forms: [["yo","soñaba"],["tú","soñabas"],["él/ella","soñaba"],["nosotros","soñábamos"],["vosotros","soñabais"],["ellos/ellas","soñaban"]]
+      },
+      {
+        verb: "compraron", tense: "Pretérito indefinido", infinitive: "comprar",
+        forms: [["yo","compré"],["tú","compraste"],["él/ella","compró"],["nosotros","compramos"],["vosotros","comprasteis"],["ellos/ellas","compraron"]]
+      },
+      {
+        verb: "tenía", tense: "Pretérito imperfecto de indicativo", infinitive: "tener",
+        forms: [["yo","tenía"],["tú","tenías"],["él/ella","tenía"],["nosotros","teníamos"],["vosotros","teníais"],["ellos/ellas","tenían"]]
+      }
+    ]
+  },
+  {
+    id: "057",
+    situacion: "Hablando de una habilidad en desarrollo",
+    sentence: `<strong>Llevo</strong> varios meses aprendiendo a tocar la guitarra. Aún no <strong>soy</strong> muy bueno, pero <strong>voy</strong> mejorando.`,
+    verbs: [
+      {
+        verb: "llevo", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      },
+      {
+        verb: "soy", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      }
+    ]
+  },
+  {
+    id: "058",
+    situacion: "Quejándose de un servicio",
+    sentence: `El técnico <strong>dijo</strong> que <strong>vendría</strong> el martes y no <strong>ha aparecido</strong>. Ya <strong>van</strong> tres veces que nos <strong>falla</strong>.`,
+    verbs: [
+      {
+        verb: "dijo", tense: "Pretérito indefinido", infinitive: "decir",
+        forms: [["yo","dije"],["tú","dijiste"],["él/ella","dijo"],["nosotros","dijimos"],["vosotros","dijisteis"],["ellos/ellas","dijeron"]]
+      },
+      {
+        verb: "vendría", tense: "Condicional simple", infinitive: "venir",
+        forms: [["yo","vendría"],["tú","vendrías"],["él/ella","vendría"],["nosotros","vendríamos"],["vosotros","vendríais"],["ellos/ellas","vendrían"]]
+      },
+      {
+        verb: "ha aparecido", tense: "Pretérito perfecto compuesto", infinitive: "aparecer",
+        forms: [["yo","he aparecido"],["tú","has aparecido"],["él/ella","ha aparecido"],["nosotros","hemos aparecido"],["vosotros","habéis aparecido"],["ellos/ellas","han aparecido"]]
+      },
+      {
+        verb: "falla", tense: "Presente de indicativo", infinitive: "fallar",
+        forms: [["yo","fallo"],["tú","fallas"],["él/ella","falla"],["nosotros","fallamos"],["vosotros","falláis"],["ellos/ellas","fallan"]]
+      }
+    ]
+  },
+  {
+    id: "059",
+    situacion: "Pidiendo indicaciones — usted",
+    sentence: `Perdone, ¿<strong>podría</strong> indicarme cómo llegar a la Calle Gran Vía desde aquí?`,
+    verbs: [
+      {
+        verb: "podría", tense: "Condicional simple", infinitive: "poder",
+        forms: [["yo","podría"],["tú","podrías"],["él/ella","podría"],["nosotros","podríamos"],["vosotros","podríais"],["ellos/ellas","podrían"]]
+      }
+    ]
+  },
+  {
+    id: "060",
+    situacion: "Hablando de un libro o serie",
+    sentence: `<strong>Estoy leyendo</strong> una novela que me <strong>recomendó</strong> mi hermana y no <strong>puedo</strong> parar.`,
+    verbs: [
+      {
+        verb: "estoy leyendo", tense: "Presente de indicativo + gerundio", infinitive: "leer",
+        forms: [["yo","estoy leyendo"],["tú","estás leyendo"],["él/ella","está leyendo"],["nosotros","estamos leyendo"],["vosotros","estáis leyendo"],["ellos/ellas","están leyendo"]]
+      },
+      {
+        verb: "recomendó", tense: "Pretérito indefinido", infinitive: "recomendar",
+        forms: [["yo","recomendé"],["tú","recomendaste"],["él/ella","recomendó"],["nosotros","recomendamos"],["vosotros","recomendasteis"],["ellos/ellas","recomendaron"]]
+      },
+      {
+        verb: "puedo", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      }
+    ]
+  },
+  {
+    id: "061",
+    situacion: "Preguntando por la salud de alguien",
+    sentence: `¿Cómo <strong>está</strong> tu madre? <strong>He oído</strong> que <strong>estuvo</strong> ingresada.`,
+    verbs: [
+      {
+        verb: "está", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      },
+      {
+        verb: "he oído", tense: "Pretérito perfecto compuesto", infinitive: "oír",
+        forms: [["yo","he oído"],["tú","has oído"],["él/ella","ha oído"],["nosotros","hemos oído"],["vosotros","habéis oído"],["ellos/ellas","han oído"]]
+      },
+      {
+        verb: "estuvo", tense: "Pretérito indefinido", infinitive: "estar",
+        forms: [["yo","estuve"],["tú","estuviste"],["él/ella","estuvo"],["nosotros","estuvimos"],["vosotros","estuvisteis"],["ellos/ellas","estuvieron"]]
+      }
+    ]
+  },
+  {
+    id: "062",
+    situacion: "Expresando desacuerdo",
+    sentence: `No <strong>estoy</strong> de acuerdo para nada. <strong>Creo</strong> que <strong>deberíamos</strong> hablarlo antes de tomar una decisión.`,
+    verbs: [
+      {
+        verb: "estoy", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      },
+      {
+        verb: "creo", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "deberíamos", tense: "Condicional simple", infinitive: "deber",
+        forms: [["yo","debería"],["tú","deberías"],["él/ella","debería"],["nosotros","deberíamos"],["vosotros","deberíais"],["ellos/ellas","deberían"]]
+      }
+    ]
+  },
+  {
+    id: "063",
+    situacion: "Describiendo cómo era antes un lugar",
+    sentence: `Antes aquí <strong>había</strong> una panadería que <strong>olía</strong> de maravilla. La <strong>cerraron</strong> hace un par de años.`,
+    verbs: [
+      {
+        verb: "había", tense: "Pretérito imperfecto de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal.", forms: [["(impersonal)","había"]]
+      },
+      {
+        verb: "olía", tense: "Pretérito imperfecto de indicativo", infinitive: "oler",
+        forms: [["yo","olía"],["tú","olías"],["él/ella","olía"],["nosotros","olíamos"],["vosotros","olíais"],["ellos/ellas","olían"]]
+      },
+      {
+        verb: "cerraron", tense: "Pretérito indefinido", infinitive: "cerrar",
+        forms: [["yo","cerré"],["tú","cerraste"],["él/ella","cerró"],["nosotros","cerramos"],["vosotros","cerrasteis"],["ellos/ellas","cerraron"]]
+      }
+    ]
+  },
+  {
+    id: "064",
+    situacion: "Dando consejo a un amigo",
+    sentence: `<strong>Habla</strong> con él directamente. No <strong>creo</strong> que <strong>sea</strong> tan difícil como <strong>piensas</strong>.`,
+    verbs: [
+      {
+        verb: "habla", tense: "Imperativo afirmativo", infinitive: "hablar",
+        forms: [["tú","habla"],["vosotros","hablad"]]
+      },
+      {
+        verb: "creo", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "sea", tense: "Presente de subjuntivo", infinitive: "ser",
+        forms: [["yo","sea"],["tú","seas"],["él/ella","sea"],["nosotros","seamos"],["vosotros","seáis"],["ellos/ellas","sean"]]
+      },
+      {
+        verb: "piensas", tense: "Presente de indicativo", infinitive: "pensar",
+        forms: [["yo","pienso"],["tú","piensas"],["él/ella","piensa"],["nosotros","pensamos"],["vosotros","pensáis"],["ellos/ellas","piensan"]]
+      }
+    ]
+  },
+  {
+    id: "065",
+    situacion: "Una noche que se alargó",
+    sentence: `<strong>Estábamos</strong> a punto de irnos cuando <strong>apareció</strong> Juan con una botella de cava y ya no <strong>nos fuimos</strong> hasta las cuatro.`,
+    verbs: [
+      {
+        verb: "estábamos", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      },
+      {
+        verb: "apareció", tense: "Pretérito indefinido", infinitive: "aparecer",
+        forms: [["yo","aparecí"],["tú","apareciste"],["él/ella","apareció"],["nosotros","aparecimos"],["vosotros","aparecisteis"],["ellos/ellas","aparecieron"]]
+      },
+      {
+        verb: "nos fuimos", tense: "Pretérito indefinido", infinitive: "irse",
+        forms: [["yo","me fui"],["tú","te fuiste"],["él/ella","se fue"],["nosotros","nos fuimos"],["vosotros","os fuisteis"],["ellos/ellas","se fueron"]]
+      }
+    ]
+  },
+  {
+    id: "066",
+    situacion: "Expresando un deseo",
+    sentence: `Ojalá <strong>pudiéramos</strong> hacer este viaje todos juntos.`,
+    verbs: [
+      {
+        verb: "pudiéramos", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "poder",
+        forms: [["yo","pudiera"],["tú","pudieras"],["él/ella","pudiera"],["nosotros","pudiéramos"],["vosotros","pudierais"],["ellos/ellas","pudieran"]]
+      }
+    ]
+  },
+  {
+    id: "067",
+    situacion: "En la farmacia",
+    sentence: `Me <strong>ha recetado</strong> el médico este antibiótico. ¿<strong>Tenéis</strong> o <strong>tengo</strong> que pedirlo en otra farmacia?`,
+    verbs: [
+      {
+        verb: "ha recetado", tense: "Pretérito perfecto compuesto", infinitive: "recetar",
+        forms: [["yo","he recetado"],["tú","has recetado"],["él/ella","ha recetado"],["nosotros","hemos recetado"],["vosotros","habéis recetado"],["ellos/ellas","han recetado"]]
+      },
+      {
+        verb: "tenéis / tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "068",
+    situacion: "Reflexionando sobre una relación",
+    sentence: `Cuando <strong>éramos</strong> novios, <strong>hacíamos</strong> muchos planes juntos. Ahora todo <strong>es</strong> diferente.`,
+    verbs: [
+      {
+        verb: "éramos", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      },
+      {
+        verb: "hacíamos", tense: "Pretérito imperfecto de indicativo", infinitive: "hacer",
+        forms: [["yo","hacía"],["tú","hacías"],["él/ella","hacía"],["nosotros","hacíamos"],["vosotros","hacíais"],["ellos/ellas","hacían"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "069",
+    situacion: "Avisando de que llegas tarde",
+    sentence: `<strong>Voy</strong> para allá, pero <strong>he cogido</strong> el autobús equivocado. <strong>Llegaré</strong> en unos veinte minutos, lo siento.`,
+    verbs: [
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "he cogido", tense: "Pretérito perfecto compuesto", infinitive: "coger",
+        forms: [["yo","he cogido"],["tú","has cogido"],["él/ella","ha cogido"],["nosotros","hemos cogido"],["vosotros","habéis cogido"],["ellos/ellas","han cogido"]]
+      },
+      {
+        verb: "llegaré", tense: "Futuro simple", infinitive: "llegar",
+        forms: [["yo","llegaré"],["tú","llegarás"],["él/ella","llegará"],["nosotros","llegaremos"],["vosotros","llegaréis"],["ellos/ellas","llegarán"]]
+      }
+    ]
+  },
+  {
+    id: "070",
+    situacion: "Dando instrucciones en el trabajo",
+    sentence: `<strong>Mandad</strong> el informe antes del mediodía y <strong>aseguraos</strong> de que <strong>esté</strong> bien revisado.`,
+    verbs: [
+      {
+        verb: "mandad", tense: "Imperativo afirmativo", infinitive: "mandar",
+        forms: [["tú","manda"],["vosotros","mandad"]]
+      },
+      {
+        verb: "aseguraos", tense: "Imperativo afirmativo", infinitive: "asegurarse",
+        forms: [["tú","asegúrate"],["vosotros","aseguraos"]]
+      },
+      {
+        verb: "esté", tense: "Presente de subjuntivo", infinitive: "estar",
+        forms: [["yo","esté"],["tú","estés"],["él/ella","esté"],["nosotros","estemos"],["vosotros","estéis"],["ellos/ellas","estén"]]
+      }
+    ]
+  },
+  {
+    id: "071",
+    situacion: "Hablando de preferencias culinarias",
+    sentence: `Antes no me <strong>gustaban</strong> nada las aceitunas, y ahora no <strong>puedo</strong> vivir sin ellas.`,
+    verbs: [
+      {
+        verb: "gustaban", tense: "Pretérito imperfecto de indicativo", infinitive: "gustar",
+        note: "Verbo de afección — solo se conjuga en 3.ª persona.",
+        forms: [["(a mí)","me gustaba/gustaban"],["(a ti)","te gustaba/gustaban"],["(a él)","le gustaba/gustaban"],["(a nosotros)","nos gustaba/gustaban"],["(a vosotros)","os gustaba/gustaban"],["(a ellos)","les gustaba/gustaban"]]
+      },
+      {
+        verb: "puedo", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      }
+    ]
+  },
+  {
+    id: "072",
+    situacion: "Preguntando qué hicisteis el finde",
+    sentence: `¿Qué <strong>habéis hecho</strong> este finde? ¿<strong>Estuvisteis</strong> en casa o <strong>salisteis</strong>?`,
+    verbs: [
+      {
+        verb: "habéis hecho", tense: "Pretérito perfecto compuesto", infinitive: "hacer",
+        forms: [["yo","he hecho"],["tú","has hecho"],["él/ella","ha hecho"],["nosotros","hemos hecho"],["vosotros","habéis hecho"],["ellos/ellas","han hecho"]]
+      },
+      {
+        verb: "estuvisteis", tense: "Pretérito indefinido", infinitive: "estar",
+        forms: [["yo","estuve"],["tú","estuviste"],["él/ella","estuvo"],["nosotros","estuvimos"],["vosotros","estuvisteis"],["ellos/ellas","estuvieron"]]
+      },
+      {
+        verb: "salisteis", tense: "Pretérito indefinido", infinitive: "salir",
+        forms: [["yo","salí"],["tú","saliste"],["él/ella","salió"],["nosotros","salimos"],["vosotros","salisteis"],["ellos/ellas","salieron"]]
+      }
+    ]
+  },
+  {
+    id: "073",
+    situacion: "Expresando alivio",
+    sentence: `Menos mal que <strong>trajiste</strong> el paraguas. <strong>Estaba</strong> a punto de mojarme entera.`,
+    verbs: [
+      {
+        verb: "trajiste", tense: "Pretérito indefinido", infinitive: "traer",
+        forms: [["yo","traje"],["tú","trajiste"],["él/ella","trajo"],["nosotros","trajimos"],["vosotros","trajisteis"],["ellos/ellas","trajeron"]]
+      },
+      {
+        verb: "estaba", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      }
+    ]
+  },
+  {
+    id: "074",
+    situacion: "Un descubrimiento inesperado",
+    sentence: `Cuando <strong>estaba</strong> ordenando el armario, <strong>encontré</strong> unas fotos que no <strong>había visto</strong> en años.`,
+    verbs: [
+      {
+        verb: "estaba", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      },
+      {
+        verb: "encontré", tense: "Pretérito indefinido", infinitive: "encontrar",
+        forms: [["yo","encontré"],["tú","encontraste"],["él/ella","encontró"],["nosotros","encontramos"],["vosotros","encontrasteis"],["ellos/ellas","encontraron"]]
+      },
+      {
+        verb: "había visto", tense: "Pretérito pluscuamperfecto de indicativo", infinitive: "ver",
+        forms: [["yo","había visto"],["tú","habías visto"],["él/ella","había visto"],["nosotros","habíamos visto"],["vosotros","habíais visto"],["ellos/ellas","habían visto"]]
+      }
+    ]
+  },
+  {
+    id: "075",
+    situacion: "Expresando que algo es poco probable",
+    sentence: `Dudo mucho que <strong>lleguen</strong> a tiempo. Conociéndoles, <strong>saldrán</strong> con dos horas de retraso.`,
+    verbs: [
+      {
+        verb: "lleguen", tense: "Presente de subjuntivo", infinitive: "llegar",
+        forms: [["yo","llegue"],["tú","llegues"],["él/ella","llegue"],["nosotros","lleguemos"],["vosotros","lleguéis"],["ellos/ellas","lleguen"]]
+      },
+      {
+        verb: "saldrán", tense: "Futuro simple", infinitive: "salir",
+        forms: [["yo","saldré"],["tú","saldrás"],["él/ella","saldrá"],["nosotros","saldremos"],["vosotros","saldréis"],["ellos/ellas","saldrán"]]
+      }
+    ]
+  },
+  {
+    id: "076",
+    situacion: "Algo que llevas tiempo pensando hacer",
+    sentence: `<strong>He estado pensando</strong> en apuntarme al gimnasio, pero nunca <strong>encuentro</strong> el momento.`,
+    verbs: [
+      {
+        verb: "he estado pensando", tense: "Pretérito perfecto compuesto + gerundio", infinitive: "pensar",
+        forms: [["yo","he estado pensando"],["tú","has estado pensando"],["él/ella","ha estado pensando"],["nosotros","hemos estado pensando"],["vosotros","habéis estado pensando"],["ellos/ellas","han estado pensando"]]
+      },
+      {
+        verb: "encuentro", tense: "Presente de indicativo", infinitive: "encontrar",
+        forms: [["yo","encuentro"],["tú","encuentras"],["él/ella","encuentra"],["nosotros","encontramos"],["vosotros","encontráis"],["ellos/ellas","encuentran"]]
+      }
+    ]
+  },
+  {
+    id: "077",
+    situacion: "En un bar, pidiendo para el grupo",
+    sentence: `<strong>Ponednos</strong> cuatro cañas y una botella de agua, cuando <strong>podáis</strong>.`,
+    verbs: [
+      {
+        verb: "ponednos", tense: "Imperativo afirmativo", infinitive: "poner",
+        forms: [["tú","pon"],["vosotros","poned"]]
+      },
+      {
+        verb: "podáis", tense: "Presente de subjuntivo", infinitive: "poder",
+        forms: [["yo","pueda"],["tú","puedas"],["él/ella","pueda"],["nosotros","podamos"],["vosotros","podáis"],["ellos/ellas","puedan"]]
+      }
+    ]
+  },
+  {
+    id: "078",
+    situacion: "Un encuentro inesperado",
+    sentence: `Ayer <strong>me encontré</strong> a tu prima en el mercado. No <strong>sabía</strong> que <strong>vivía</strong> por el barrio.`,
+    verbs: [
+      {
+        verb: "me encontré", tense: "Pretérito indefinido", infinitive: "encontrarse",
+        forms: [["yo","me encontré"],["tú","te encontraste"],["él/ella","se encontró"],["nosotros","nos encontramos"],["vosotros","os encontrasteis"],["ellos/ellas","se encontraron"]]
+      },
+      {
+        verb: "sabía", tense: "Pretérito imperfecto de indicativo", infinitive: "saber",
+        forms: [["yo","sabía"],["tú","sabías"],["él/ella","sabía"],["nosotros","sabíamos"],["vosotros","sabíais"],["ellos/ellas","sabían"]]
+      },
+      {
+        verb: "vivía", tense: "Pretérito imperfecto de indicativo", infinitive: "vivir",
+        forms: [["yo","vivía"],["tú","vivías"],["él/ella","vivía"],["nosotros","vivíamos"],["vosotros","vivíais"],["ellos/ellas","vivían"]]
+      }
+    ]
+  },
+  {
+    id: "079",
+    situacion: "Condición sencilla",
+    sentence: `Si <strong>terminas</strong> antes de las seis, <strong>podemos</strong> ir a tomar algo.`,
+    verbs: [
+      {
+        verb: "terminas", tense: "Presente de indicativo", infinitive: "terminar",
+        forms: [["yo","termino"],["tú","terminas"],["él/ella","termina"],["nosotros","terminamos"],["vosotros","termináis"],["ellos/ellas","terminan"]]
+      },
+      {
+        verb: "podemos", tense: "Presente de indicativo", infinitive: "poder",
+        forms: [["yo","puedo"],["tú","puedes"],["él/ella","puede"],["nosotros","podemos"],["vosotros","podéis"],["ellos/ellas","pueden"]]
+      }
+    ]
+  },
+  {
+    id: "080",
+    situacion: "Hablando de un sueño",
+    sentence: `Algún día me <strong>gustaría</strong> vivir en una casa con jardín, lejos del ruido de la ciudad.`,
+    verbs: [
+      {
+        verb: "gustaría", tense: "Condicional simple", infinitive: "gustar",
+        note: "Verbo de afección — condicional cortés.",
+        forms: [["(a mí)","me gustaría"],["(a ti)","te gustaría"],["(a él)","le gustaría"],["(a nosotros)","nos gustaría"],["(a vosotros)","os gustaría"],["(a ellos)","les gustaría"]]
+      }
+    ]
+  },
+  {
+    id: "081",
+    situacion: "En una tienda buscando algo que viste online",
+    sentence: `Disculpa, <strong>he visto</strong> en vuestra web un abrigo azul marino, pero aquí no lo <strong>veo</strong>. ¿Lo <strong>tenéis</strong> en tienda?`,
+    verbs: [
+      {
+        verb: "he visto", tense: "Pretérito perfecto compuesto", infinitive: "ver",
+        forms: [["yo","he visto"],["tú","has visto"],["él/ella","ha visto"],["nosotros","hemos visto"],["vosotros","habéis visto"],["ellos/ellas","han visto"]]
+      },
+      {
+        verb: "veo", tense: "Presente de indicativo", infinitive: "ver",
+        forms: [["yo","veo"],["tú","ves"],["él/ella","ve"],["nosotros","vemos"],["vosotros","veis"],["ellos/ellas","ven"]]
+      },
+      {
+        verb: "tenéis", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "082",
+    situacion: "Explicando por qué llegaste tarde",
+    sentence: `<strong>Había</strong> un accidente en la autopista y <strong>tuvimos</strong> que coger una ruta alternativa.`,
+    verbs: [
+      {
+        verb: "había", tense: "Pretérito imperfecto de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal.", forms: [["(impersonal)","había"]]
+      },
+      {
+        verb: "tuvimos", tense: "Pretérito indefinido", infinitive: "tener",
+        forms: [["yo","tuve"],["tú","tuviste"],["él/ella","tuvo"],["nosotros","tuvimos"],["vosotros","tuvisteis"],["ellos/ellas","tuvieron"]]
+      }
+    ]
+  },
+  {
+    id: "083",
+    situacion: "Reaccionando a una buena noticia",
+    sentence: `¡Qué bien que <strong>hayas conseguido</strong> el trabajo! Me <strong>alegro</strong> muchísimo.`,
+    verbs: [
+      {
+        verb: "hayas conseguido", tense: "Pretérito perfecto de subjuntivo", infinitive: "conseguir",
+        forms: [["yo","haya conseguido"],["tú","hayas conseguido"],["él/ella","haya conseguido"],["nosotros","hayamos conseguido"],["vosotros","hayáis conseguido"],["ellos/ellas","hayan conseguido"]]
+      },
+      {
+        verb: "alegro", tense: "Presente de indicativo", infinitive: "alegrarse",
+        forms: [["yo","me alegro"],["tú","te alegras"],["él/ella","se alegra"],["nosotros","nos alegramos"],["vosotros","os alegráis"],["ellos/ellas","se alegran"]]
+      }
+    ]
+  },
+  {
+    id: "084",
+    situacion: "Dando consejos antes de una entrevista",
+    sentence: `<strong>Sé</strong> tú mismo, <strong>escucha</strong> bien las preguntas antes de contestar y no <strong>te pongas</strong> nervioso.`,
+    verbs: [
+      {
+        verb: "sé", tense: "Imperativo afirmativo", infinitive: "ser",
+        forms: [["tú","sé"],["vosotros","sed"]]
+      },
+      {
+        verb: "escucha", tense: "Imperativo afirmativo", infinitive: "escuchar",
+        forms: [["tú","escucha"],["vosotros","escuchad"]]
+      },
+      {
+        verb: "te pongas", tense: "Imperativo negativo / Presente de subjuntivo", infinitive: "ponerse",
+        forms: [["yo","me ponga"],["tú","te pongas"],["él/ella","se ponga"],["nosotros","nos pongamos"],["vosotros","os pongáis"],["ellos/ellas","se pongan"]]
+      }
+    ]
+  },
+  {
+    id: "085",
+    situacion: "Contando un día agotador",
+    sentence: `Hoy <strong>he tenido</strong> reuniones desde las nueve de la mañana. <strong>Estoy</strong> agotada y solo <strong>quiero</strong> llegar a casa y no hacer nada.`,
+    verbs: [
+      {
+        verb: "he tenido", tense: "Pretérito perfecto compuesto", infinitive: "tener",
+        forms: [["yo","he tenido"],["tú","has tenido"],["él/ella","ha tenido"],["nosotros","hemos tenido"],["vosotros","habéis tenido"],["ellos/ellas","han tenido"]]
+      },
+      {
+        verb: "estoy", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      },
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      }
+    ]
+  },
+  {
+    id: "086",
+    situacion: "Sorprendido por lo que hizo alguien",
+    sentence: `No me <strong>podía</strong> creer que <strong>hubiera hecho</strong> eso sin decírselo a nadie.`,
+    verbs: [
+      {
+        verb: "podía", tense: "Pretérito imperfecto de indicativo", infinitive: "poder",
+        forms: [["yo","podía"],["tú","podías"],["él/ella","podía"],["nosotros","podíamos"],["vosotros","podíais"],["ellos/ellas","podían"]]
+      },
+      {
+        verb: "hubiera hecho", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "hacer",
+        forms: [["yo","hubiera hecho"],["tú","hubieras hecho"],["él/ella","hubiera hecho"],["nosotros","hubiéramos hecho"],["vosotros","hubierais hecho"],["ellos/ellas","hubieran hecho"]]
+      }
+    ]
+  },
+  {
+    id: "087",
+    situacion: "Preguntando qué haría alguien en tu lugar",
+    sentence: `¿Qué <strong>harías</strong> tú en mi lugar? Yo no <strong>sé</strong> qué hacer.`,
+    verbs: [
+      {
+        verb: "harías", tense: "Condicional simple", infinitive: "hacer",
+        forms: [["yo","haría"],["tú","harías"],["él/ella","haría"],["nosotros","haríamos"],["vosotros","haríais"],["ellos/ellas","harían"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      }
+    ]
+  },
+  {
+    id: "088",
+    situacion: "Un plan cancelado",
+    sentence: `<strong>Íbamos</strong> a ir al concierto, pero <strong>cancelaron</strong> todas las entradas y <strong>tuvimos</strong> que buscar algo más que hacer.`,
+    verbs: [
+      {
+        verb: "íbamos", tense: "Pretérito imperfecto de indicativo", infinitive: "ir",
+        forms: [["yo","iba"],["tú","ibas"],["él/ella","iba"],["nosotros","íbamos"],["vosotros","ibais"],["ellos/ellas","iban"]]
+      },
+      {
+        verb: "cancelaron", tense: "Pretérito indefinido", infinitive: "cancelar",
+        forms: [["yo","cancelé"],["tú","cancelaste"],["él/ella","canceló"],["nosotros","cancelamos"],["vosotros","cancelasteis"],["ellos/ellas","cancelaron"]]
+      },
+      {
+        verb: "tuvimos", tense: "Pretérito indefinido", infinitive: "tener",
+        forms: [["yo","tuve"],["tú","tuviste"],["él/ella","tuvo"],["nosotros","tuvimos"],["vosotros","tuvisteis"],["ellos/ellas","tuvieron"]]
+      }
+    ]
+  },
+  {
+    id: "089",
+    situacion: "Reaccionando a una historia",
+    sentence: `¡No me <strong>digas</strong>! ¿Y qué <strong>hiciste</strong> cuando te <strong>diste</strong> cuenta?`,
+    verbs: [
+      {
+        verb: "digas", tense: "Imperativo negativo / Presente de subjuntivo", infinitive: "decir",
+        forms: [["yo","diga"],["tú","digas"],["él/ella","diga"],["nosotros","digamos"],["vosotros","digáis"],["ellos/ellas","digan"]]
+      },
+      {
+        verb: "hiciste", tense: "Pretérito indefinido", infinitive: "hacer",
+        forms: [["yo","hice"],["tú","hiciste"],["él/ella","hizo"],["nosotros","hicimos"],["vosotros","hicisteis"],["ellos/ellas","hicieron"]]
+      },
+      {
+        verb: "diste", tense: "Pretérito indefinido", infinitive: "darse",
+        forms: [["yo","me di"],["tú","te diste"],["él/ella","se dio"],["nosotros","nos dimos"],["vosotros","os disteis"],["ellos/ellas","se dieron"]]
+      }
+    ]
+  },
+  {
+    id: "090",
+    situacion: "Quejándose de un casero",
+    sentence: `Mi piso <strong>lleva</strong> meses sin calefacción. <strong>He llamado</strong> al casero varias veces y no <strong>hace</strong> nada.`,
+    verbs: [
+      {
+        verb: "lleva", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      },
+      {
+        verb: "he llamado", tense: "Pretérito perfecto compuesto", infinitive: "llamar",
+        forms: [["yo","he llamado"],["tú","has llamado"],["él/ella","ha llamado"],["nosotros","hemos llamado"],["vosotros","habéis llamado"],["ellos/ellas","han llamado"]]
+      },
+      {
+        verb: "hace", tense: "Presente de indicativo", infinitive: "hacer",
+        forms: [["yo","hago"],["tú","haces"],["él/ella","hace"],["nosotros","hacemos"],["vosotros","hacéis"],["ellos/ellas","hacen"]]
+      }
+    ]
+  },
+  {
+    id: "091",
+    situacion: "Hablando de algo que cocinaste",
+    sentence: `<strong>Hice</strong> una tortilla de patatas esta tarde y <strong>quedó</strong> buenísima, no <strong>sé</strong> cómo lo <strong>conseguí</strong>.`,
+    verbs: [
+      {
+        verb: "hice", tense: "Pretérito indefinido", infinitive: "hacer",
+        forms: [["yo","hice"],["tú","hiciste"],["él/ella","hizo"],["nosotros","hicimos"],["vosotros","hicisteis"],["ellos/ellas","hicieron"]]
+      },
+      {
+        verb: "quedó", tense: "Pretérito indefinido", infinitive: "quedar",
+        forms: [["yo","quedé"],["tú","quedaste"],["él/ella","quedó"],["nosotros","quedamos"],["vosotros","quedasteis"],["ellos/ellas","quedaron"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "conseguí", tense: "Pretérito indefinido", infinitive: "conseguir",
+        forms: [["yo","conseguí"],["tú","conseguiste"],["él/ella","consiguió"],["nosotros","conseguimos"],["vosotros","conseguisteis"],["ellos/ellas","consiguieron"]]
+      }
+    ]
+  },
+  {
+    id: "092",
+    situacion: "Lamentando algo no dicho",
+    sentence: `Ojalá le <strong>hubiera dicho</strong> lo que <strong>sentía</strong> antes de que <strong>se fuera</strong>.`,
+    verbs: [
+      {
+        verb: "hubiera dicho", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "decir",
+        forms: [["yo","hubiera dicho"],["tú","hubieras dicho"],["él/ella","hubiera dicho"],["nosotros","hubiéramos dicho"],["vosotros","hubierais dicho"],["ellos/ellas","hubieran dicho"]]
+      },
+      {
+        verb: "sentía", tense: "Pretérito imperfecto de indicativo", infinitive: "sentir",
+        forms: [["yo","sentía"],["tú","sentías"],["él/ella","sentía"],["nosotros","sentíamos"],["vosotros","sentíais"],["ellos/ellas","sentían"]]
+      },
+      {
+        verb: "se fuera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "irse",
+        forms: [["yo","me fuera"],["tú","te fueras"],["él/ella","se fuera"],["nosotros","nos fuéramos"],["vosotros","os fuerais"],["ellos/ellas","se fueran"]]
+      }
+    ]
+  },
+  {
+    id: "093",
+    situacion: "Haciendo una predicción",
+    sentence: `Si <strong>sigue</strong> así, <strong>acabará</strong> enfadándose con todo el mundo.`,
+    verbs: [
+      {
+        verb: "sigue", tense: "Presente de indicativo", infinitive: "seguir",
+        forms: [["yo","sigo"],["tú","sigues"],["él/ella","sigue"],["nosotros","seguimos"],["vosotros","seguís"],["ellos/ellas","siguen"]]
+      },
+      {
+        verb: "acabará", tense: "Futuro simple", infinitive: "acabar",
+        forms: [["yo","acabaré"],["tú","acabarás"],["él/ella","acabará"],["nosotros","acabaremos"],["vosotros","acabaréis"],["ellos/ellas","acabarán"]]
+      }
+    ]
+  },
+  {
+    id: "094",
+    situacion: "Describiendo cómo eras de pequeño",
+    sentence: `De pequeña <strong>era</strong> muy tímida. No <strong>hablaba</strong> con nadie si no me <strong>hablaban</strong> primero.`,
+    verbs: [
+      {
+        verb: "era", tense: "Pretérito imperfecto de indicativo", infinitive: "ser",
+        forms: [["yo","era"],["tú","eras"],["él/ella","era"],["nosotros","éramos"],["vosotros","erais"],["ellos/ellas","eran"]]
+      },
+      {
+        verb: "hablaba / hablaban", tense: "Pretérito imperfecto de indicativo", infinitive: "hablar",
+        forms: [["yo","hablaba"],["tú","hablabas"],["él/ella","hablaba"],["nosotros","hablábamos"],["vosotros","hablabais"],["ellos/ellas","hablaban"]]
+      }
+    ]
+  },
+  {
+    id: "095",
+    situacion: "Reclamando en una tienda",
+    sentence: `Mira, <strong>compré</strong> esto aquí la semana pasada y ya no <strong>funciona</strong>. <strong>Quisiera</strong> cambiarlo si <strong>es</strong> posible.`,
+    verbs: [
+      {
+        verb: "compré", tense: "Pretérito indefinido", infinitive: "comprar",
+        forms: [["yo","compré"],["tú","compraste"],["él/ella","compró"],["nosotros","compramos"],["vosotros","comprasteis"],["ellos/ellas","compraron"]]
+      },
+      {
+        verb: "funciona", tense: "Presente de indicativo", infinitive: "funcionar",
+        forms: [["yo","funciono"],["tú","funcionas"],["él/ella","funciona"],["nosotros","funcionamos"],["vosotros","funcionáis"],["ellos/ellas","funcionan"]]
+      },
+      {
+        verb: "quisiera", tense: "Pretérito imperfecto de subjuntivo (-ra) — solicitud cortés", infinitive: "querer",
+        forms: [["yo","quisiera"],["tú","quisieras"],["él/ella","quisiera"],["nosotros","quisiéramos"],["vosotros","quisierais"],["ellos/ellas","quisieran"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "096",
+    situacion: "Contando una situación incómoda",
+    sentence: `<strong>Estaba hablando</strong> con mi jefe cuando de repente <strong>me di cuenta</strong> de que <strong>tenía</strong> una mancha enorme en la camisa.`,
+    verbs: [
+      {
+        verb: "estaba hablando", tense: "Pretérito imperfecto de indicativo + gerundio", infinitive: "hablar",
+        forms: [["yo","estaba hablando"],["tú","estabas hablando"],["él/ella","estaba hablando"],["nosotros","estábamos hablando"],["vosotros","estabais hablando"],["ellos/ellas","estaban hablando"]]
+      },
+      {
+        verb: "me di cuenta", tense: "Pretérito indefinido", infinitive: "darse cuenta",
+        forms: [["yo","me di cuenta"],["tú","te diste cuenta"],["él/ella","se dio cuenta"],["nosotros","nos dimos cuenta"],["vosotros","os disteis cuenta"],["ellos/ellas","se dieron cuenta"]]
+      },
+      {
+        verb: "tenía", tense: "Pretérito imperfecto de indicativo", infinitive: "tener",
+        forms: [["yo","tenía"],["tú","tenías"],["él/ella","tenía"],["nosotros","teníamos"],["vosotros","teníais"],["ellos/ellas","tenían"]]
+      }
+    ]
+  },
+  {
+    id: "097",
+    situacion: "Hablando de algo emocionante",
+    sentence: `Esta semana <strong>he empezado</strong> un curso de cocina y me <strong>está encantando</strong>. Ojalá lo <strong>hubiera</strong> hecho antes.`,
+    verbs: [
+      {
+        verb: "he empezado", tense: "Pretérito perfecto compuesto", infinitive: "empezar",
+        forms: [["yo","he empezado"],["tú","has empezado"],["él/ella","ha empezado"],["nosotros","hemos empezado"],["vosotros","habéis empezado"],["ellos/ellas","han empezado"]]
+      },
+      {
+        verb: "está encantando", tense: "Presente de indicativo + gerundio", infinitive: "encantar",
+        note: "Verbo de afección — solo se conjuga en 3.ª persona.",
+        forms: [["(a mí)","me está encantando"],["(a ti)","te está encantando"],["(a él)","le está encantando"],["(a nosotros)","nos está encantando"],["(a vosotros)","os está encantando"],["(a ellos)","les está encantando"]]
+      },
+      {
+        verb: "hubiera hecho", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "hacer",
+        forms: [["yo","hubiera hecho"],["tú","hubieras hecho"],["él/ella","hubiera hecho"],["nosotros","hubiéramos hecho"],["vosotros","hubierais hecho"],["ellos/ellas","hubieran hecho"]]
+      }
+    ]
+  },
+  {
+    id: "098",
+    situacion: "Preguntando cómo es un sitio",
+    sentence: `¿<strong>Es</strong> muy grande el piso? ¿Cuántos sois viviendo allí?`,
+    verbs: [
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "099",
+    situacion: "Incertidumbre sobre el futuro",
+    sentence: `No <strong>sé</strong> si <strong>podré</strong> ir a la boda. <strong>Depende</strong> de si me <strong>dan</strong> el día libre.`,
+    verbs: [
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "podré", tense: "Futuro simple", infinitive: "poder",
+        forms: [["yo","podré"],["tú","podrás"],["él/ella","podrá"],["nosotros","podremos"],["vosotros","podréis"],["ellos/ellas","podrán"]]
+      },
+      {
+        verb: "depende", tense: "Presente de indicativo", infinitive: "depender",
+        forms: [["yo","dependo"],["tú","dependes"],["él/ella","depende"],["nosotros","dependemos"],["vosotros","dependéis"],["ellos/ellas","dependen"]]
+      },
+      {
+        verb: "den", tense: "Presente de subjuntivo", infinitive: "dar",
+        forms: [["yo","dé"],["tú","des"],["él/ella","dé"],["nosotros","demos"],["vosotros","deis"],["ellos/ellas","den"]]
+      }
+    ]
+  },
+  {
+    id: "100",
+    situacion: "Despidiéndose",
+    sentence: `Bueno, <strong>me voy</strong> que <strong>es</strong> tarde. Ha <strong>sido</strong> un placer verte. ¡Quedamos pronto!`,
+    verbs: [
+      {
+        verb: "me voy", tense: "Presente de indicativo", infinitive: "irse",
+        forms: [["yo","me voy"],["tú","te vas"],["él/ella","se va"],["nosotros","nos vamos"],["vosotros","os vais"],["ellos/ellas","se van"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "sido", tense: "Pretérito perfecto compuesto", infinitive: "ser",
+        forms: [["yo","he sido"],["tú","has sido"],["él/ella","ha sido"],["nosotros","hemos sido"],["vosotros","habéis sido"],["ellos/ellas","han sido"]]
+      }
+    ]
+  },
+  {
+    id: "101",
+    situacion: "Algo que pasa siempre",
+    sentence: `Cada vez que <strong>voy</strong> al médico me <strong>dice</strong> que <strong>tengo</strong> que hacer más ejercicio. Ya lo <strong>sé</strong>, pero no <strong>encuentro</strong> el tiempo.`,
+    verbs: [
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "dice", tense: "Presente de indicativo", infinitive: "decir",
+        forms: [["yo","digo"],["tú","dices"],["él/ella","dice"],["nosotros","decimos"],["vosotros","decís"],["ellos/ellas","dicen"]]
+      },
+      {
+        verb: "tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "encuentro", tense: "Presente de indicativo", infinitive: "encontrar",
+        forms: [["yo","encuentro"],["tú","encuentras"],["él/ella","encuentra"],["nosotros","encontramos"],["vosotros","encontráis"],["ellos/ellas","encuentran"]]
+      }
+    ]
+  },
+  {
+    id: "102",
+    situacion: "En el médico — usted",
+    sentence: `¿Cuánto tiempo <strong>lleva</strong> usted sintiendo estos mareos? ¿<strong>Ha tomado</strong> algún medicamento?`,
+    verbs: [
+      {
+        verb: "lleva", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      },
+      {
+        verb: "ha tomado", tense: "Pretérito perfecto compuesto", infinitive: "tomar",
+        forms: [["yo","he tomado"],["tú","has tomado"],["él/ella","ha tomado"],["nosotros","hemos tomado"],["vosotros","habéis tomado"],["ellos/ellas","han tomado"]]
+      }
+    ]
+  },
+  {
+    id: "103",
+    situacion: "Por los pelos",
+    sentence: `Por poco no <strong>llego</strong>. <strong>Había</strong> un atasco enorme y <strong>estuve</strong> a punto de perder la cita.`,
+    verbs: [
+      {
+        verb: "llego", tense: "Presente de indicativo", infinitive: "llegar",
+        forms: [["yo","llego"],["tú","llegas"],["él/ella","llega"],["nosotros","llegamos"],["vosotros","llegáis"],["ellos/ellas","llegan"]]
+      },
+      {
+        verb: "había", tense: "Pretérito imperfecto de indicativo (impersonal)", infinitive: "haber",
+        note: "Forma impersonal.", forms: [["(impersonal)","había"]]
+      },
+      {
+        verb: "estuve", tense: "Pretérito indefinido", infinitive: "estar",
+        forms: [["yo","estuve"],["tú","estuviste"],["él/ella","estuvo"],["nosotros","estuvimos"],["vosotros","estuvisteis"],["ellos/ellas","estuvieron"]]
+      }
+    ]
+  },
+  {
+    id: "104",
+    situacion: "Duda sobre si cerraste algo",
+    sentence: `No <strong>recuerdo</strong> si <strong>cerré</strong> la llave del gas antes de salir. <strong>Voy</strong> a volver a comprobarlo.`,
+    verbs: [
+      {
+        verb: "recuerdo", tense: "Presente de indicativo", infinitive: "recordar",
+        forms: [["yo","recuerdo"],["tú","recuerdas"],["él/ella","recuerda"],["nosotros","recordamos"],["vosotros","recordáis"],["ellos/ellas","recuerdan"]]
+      },
+      {
+        verb: "cerré", tense: "Pretérito indefinido", infinitive: "cerrar",
+        forms: [["yo","cerré"],["tú","cerraste"],["él/ella","cerró"],["nosotros","cerramos"],["vosotros","cerrasteis"],["ellos/ellas","cerraron"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      }
+    ]
+  },
+  {
+    id: "105",
+    situacion: "Ya no puedes más",
+    sentence: `Ya no <strong>aguanto</strong> más esta situación. <strong>Creo</strong> que <strong>es</strong> hora de hablar claro.`,
+    verbs: [
+      {
+        verb: "aguanto", tense: "Presente de indicativo", infinitive: "aguantar",
+        forms: [["yo","aguanto"],["tú","aguantas"],["él/ella","aguanta"],["nosotros","aguantamos"],["vosotros","aguantáis"],["ellos/ellas","aguantan"]]
+      },
+      {
+        verb: "creo", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  // ── FASE 1B ──
+  {
+    id: "106", pattern: "P2",
+    situacion: "Lamentando no haber ido a un evento",
+    sentence: `Si <strong>hubiera sabido</strong> que el concierto <strong>iba</strong> a ser tan bueno, <strong>habría comprado</strong> entradas antes.`,
+    verbs: [
+      {
+        verb: "hubiera sabido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "saber",
+        forms: [["yo","hubiera sabido"],["tú","hubieras sabido"],["él/ella","hubiera sabido"],["nosotros","hubiéramos sabido"],["vosotros","hubierais sabido"],["ellos/ellas","hubieran sabido"]]
+      },
+      {
+        verb: "iba", tense: "Pretérito imperfecto de indicativo + infinitivo", infinitive: "ir",
+        forms: [["yo","iba"],["tú","ibas"],["él/ella","iba"],["nosotros","íbamos"],["vosotros","ibais"],["ellos/ellas","iban"]]
+      },
+      {
+        verb: "habría comprado", tense: "Condicional compuesto", infinitive: "comprar",
+        forms: [["yo","habría comprado"],["tú","habrías comprado"],["él/ella","habría comprado"],["nosotros","habríamos comprado"],["vosotros","habríais comprado"],["ellos/ellas","habrían comprado"]]
+      }
+    ]
+  },
+  {
+    id: "107", pattern: "P3",
+    situacion: "Reflexionando sobre una decisión profesional",
+    sentence: `Si <strong>hubiera aceptado</strong> ese trabajo en Barcelona, ahora <strong>estaría</strong> viviendo en una ciudad completamente diferente.`,
+    verbs: [
+      {
+        verb: "hubiera aceptado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "aceptar",
+        forms: [["yo","hubiera aceptado"],["tú","hubieras aceptado"],["él/ella","hubiera aceptado"],["nosotros","hubiéramos aceptado"],["vosotros","hubierais aceptado"],["ellos/ellas","hubieran aceptado"]]
+      },
+      {
+        verb: "estaría", tense: "Condicional simple", infinitive: "estar",
+        forms: [["yo","estaría"],["tú","estarías"],["él/ella","estaría"],["nosotros","estaríamos"],["vosotros","estaríais"],["ellos/ellas","estarían"]]
+      }
+    ]
+  },
+  {
+    id: "108", pattern: "P8",
+    situacion: "Diciéndole a un amigo que lo hizo mal",
+    sentence: `<strong>Deberías haber hablado</strong> con ella antes de tomar esa decisión. Ahora <strong>está</strong> enfadadísima.`,
+    verbs: [
+      {
+        verb: "deberías haber hablado", tense: "Condicional simple + infinitivo compuesto", infinitive: "hablar",
+        forms: [["yo","debería haber hablado"],["tú","deberías haber hablado"],["él/ella","debería haber hablado"],["nosotros","deberíamos haber hablado"],["vosotros","deberíais haber hablado"],["ellos/ellas","deberían haber hablado"]]
+      },
+      {
+        verb: "está", tense: "Presente de indicativo", infinitive: "estar",
+        forms: [["yo","estoy"],["tú","estás"],["él/ella","está"],["nosotros","estamos"],["vosotros","estáis"],["ellos/ellas","están"]]
+      }
+    ]
+  },
+  {
+    id: "109", pattern: "P7",
+    situacion: "Insistiendo en salir a correr",
+    sentence: `Aunque <strong>llueva</strong>, <strong>voy</strong> a salir a correr. <strong>Necesito</strong> despejarme.`,
+    verbs: [
+      {
+        verb: "llueva", tense: "Presente de subjuntivo", infinitive: "llover",
+        forms: [["yo","llueva"],["tú","llueva"],["él/ella","llueva"],["nosotros","llovamos"],["vosotros","llovéis"],["ellos/ellas","lluevan"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "necesito", tense: "Presente de indicativo", infinitive: "necesitar",
+        forms: [["yo","necesito"],["tú","necesitas"],["él/ella","necesita"],["nosotros","necesitamos"],["vosotros","necesitáis"],["ellos/ellas","necesitan"]]
+      }
+    ]
+  },
+  {
+    id: "110", pattern: "P8",
+    situacion: "Criticándote tras una entrevista",
+    sentence: `<strong>Podría haber preparado</strong> mucho mejor las respuestas. <strong>Me puse</strong> muy nervioso cuando me <strong>preguntaron</strong> por mi experiencia.`,
+    verbs: [
+      {
+        verb: "podría haber preparado", tense: "Condicional simple + infinitivo compuesto", infinitive: "preparar",
+        forms: [["yo","podría haber preparado"],["tú","podrías haber preparado"],["él/ella","podría haber preparado"],["nosotros","podríamos haber preparado"],["vosotros","podríais haber preparado"],["ellos/ellas","podrían haber preparado"]]
+      },
+      {
+        verb: "me puse", tense: "Pretérito indefinido", infinitive: "ponerse",
+        forms: [["yo","me puse"],["tú","te pusiste"],["él/ella","se puso"],["nosotros","nos pusimos"],["vosotros","os pusisteis"],["ellos/ellas","se pusieron"]]
+      },
+      {
+        verb: "preguntaron", tense: "Pretérito indefinido", infinitive: "preguntar",
+        forms: [["yo","pregunté"],["tú","preguntaste"],["él/ella","preguntó"],["nosotros","preguntamos"],["vosotros","preguntasteis"],["ellos/ellas","preguntaron"]]
+      }
+    ]
+  },
+  {
+    id: "111", pattern: "P2",
+    situacion: "Hablando de un vuelo perdido",
+    sentence: `Si <strong>hubiéramos salido</strong> antes de casa, no <strong>habríamos perdido</strong> el vuelo.`,
+    verbs: [
+      {
+        verb: "hubiéramos salido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "salir",
+        forms: [["yo","hubiera salido"],["tú","hubieras salido"],["él/ella","hubiera salido"],["nosotros","hubiéramos salido"],["vosotros","hubierais salido"],["ellos/ellas","hubieran salido"]]
+      },
+      {
+        verb: "habríamos perdido", tense: "Condicional compuesto", infinitive: "perder",
+        forms: [["yo","habría perdido"],["tú","habrías perdido"],["él/ella","habría perdido"],["nosotros","habríamos perdido"],["vosotros","habríais perdido"],["ellos/ellas","habrían perdido"]]
+      }
+    ]
+  },
+  {
+    id: "112", pattern: "P3",
+    situacion: "Lamentando no haber aprendido inglés de pequeño",
+    sentence: `Si <strong>hubiera aprendido</strong> inglés de pequeño, ahora <strong>tendría</strong> muchas más oportunidades de trabajo.`,
+    verbs: [
+      {
+        verb: "hubiera aprendido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "aprender",
+        forms: [["yo","hubiera aprendido"],["tú","hubieras aprendido"],["él/ella","hubiera aprendido"],["nosotros","hubiéramos aprendido"],["vosotros","hubierais aprendido"],["ellos/ellas","hubieran aprendido"]]
+      },
+      {
+        verb: "tendría", tense: "Condicional simple", infinitive: "tener",
+        forms: [["yo","tendría"],["tú","tendrías"],["él/ella","tendría"],["nosotros","tendríamos"],["vosotros","tendríais"],["ellos/ellas","tendrían"]]
+      }
+    ]
+  },
+  {
+    id: "113", pattern: "P7",
+    situacion: "Pidiendo apoyo aunque no estéis de acuerdo",
+    sentence: `Aunque no <strong>estés</strong> de acuerdo con mi decisión, <strong>espero</strong> que me <strong>apoyes</strong>.`,
+    verbs: [
+      {
+        verb: "estés", tense: "Presente de subjuntivo", infinitive: "estar",
+        forms: [["yo","esté"],["tú","estés"],["él/ella","esté"],["nosotros","estemos"],["vosotros","estéis"],["ellos/ellas","estén"]]
+      },
+      {
+        verb: "espero", tense: "Presente de indicativo", infinitive: "esperar",
+        forms: [["yo","espero"],["tú","esperas"],["él/ella","espera"],["nosotros","esperamos"],["vosotros","esperáis"],["ellos/ellas","esperan"]]
+      },
+      {
+        verb: "apoyes", tense: "Presente de subjuntivo", infinitive: "apoyar",
+        forms: [["yo","apoye"],["tú","apoyes"],["él/ella","apoye"],["nosotros","apoyemos"],["vosotros","apoyéis"],["ellos/ellas","apoyen"]]
+      }
+    ]
+  },
+  {
+    id: "114", pattern: "P8",
+    situacion: "Diciéndole a alguien que tendría que haberlo dicho antes",
+    sentence: `¡Haberlo dicho antes, ¿no? Si me lo <strong>hubieras comentado</strong>, te <strong>habría ayudado</strong>.`,
+    verbs: [
+      {
+        verb: "hubieras comentado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "comentar",
+        forms: [["yo","lo hubiera comentado"],["tú","lo hubieras comentado"],["él/ella","lo hubiera comentado"],["nosotros","lo hubiéramos comentado"],["vosotros","lo hubierais comentado"],["ellos/ellas","lo hubieran comentado"]]
+      },
+      {
+        verb: "habría ayudado", tense: "Condicional compuesto", infinitive: "ayudar",
+        forms: [["yo","habría ayudado"],["tú","habrías ayudado"],["él/ella","habría ayudado"],["nosotros","habríamos ayudado"],["vosotros","habríais ayudado"],["ellos/ellas","habrían ayudado"]]
+      }
+    ]
+  },
+  {
+    id: "115", pattern: "P1",
+    situacion: "Soñando con la lotería",
+    sentence: `Si <strong>tuviera</strong> más dinero, <strong>dejaría</strong> el trabajo y <strong>me iría</strong> a vivir a algún pueblo costero del sur.`,
+    verbs: [
+      {
+        verb: "tuviera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "tener",
+        forms: [["yo","tuviera"],["tú","tuvieras"],["él/ella","tuviera"],["nosotros","tuviéramos"],["vosotros","tuvierais"],["ellos/ellas","tuvieran"]]
+      },
+      {
+        verb: "dejaría", tense: "Condicional simple", infinitive: "dejar",
+        forms: [["yo","dejaría"],["tú","dejarías"],["él/ella","dejaría"],["nosotros","dejaríamos"],["vosotros","dejaríais"],["ellos/ellas","dejarían"]]
+      },
+      {
+        verb: "me iría", tense: "Condicional simple", infinitive: "irse",
+        forms: [["yo","me iría"],["tú","te irías"],["él/ella","se iría"],["nosotros","nos iríamos"],["vosotros","os iríais"],["ellos/ellas","se irían"]]
+      }
+    ]
+  },
+  {
+    id: "116", pattern: "P7",
+    situacion: "Insistiendo en hablar con alguien",
+    sentence: `Aunque me <strong>digas</strong> que no, <strong>voy</strong> a hablar con él. Alguien <strong>tiene</strong> que decirle la verdad.`,
+    verbs: [
+      {
+        verb: "digas", tense: "Presente de subjuntivo", infinitive: "decir",
+        forms: [["yo","diga"],["tú","digas"],["él/ella","diga"],["nosotros","digamos"],["vosotros","digáis"],["ellos/ellas","digan"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "tiene", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "117", pattern: "P2",
+    situacion: "Reflexionando sobre una relación pasada",
+    sentence: `Si <strong>hubiera sido</strong> más honesto conmigo mismo, no <strong>habría estado</strong> en esa relación tanto tiempo.`,
+    verbs: [
+      {
+        verb: "hubiera sido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "ser",
+        forms: [["yo","hubiera sido"],["tú","hubieras sido"],["él/ella","hubiera sido"],["nosotros","hubiéramos sido"],["vosotros","hubierais sido"],["ellos/ellas","hubieran sido"]]
+      },
+      {
+        verb: "habría estado", tense: "Condicional compuesto", infinitive: "estar",
+        forms: [["yo","habría estado"],["tú","habrías estado"],["él/ella","habría estado"],["nosotros","habríamos estado"],["vosotros","habríais estado"],["ellos/ellas","habrían estado"]]
+      }
+    ]
+  },
+  {
+    id: "118", pattern: "P8",
+    situacion: "Lamentando no haber llamado antes",
+    sentence: `<strong>Tendría que haber llamado</strong> antes. Ahora <strong>es</strong> demasiado tarde y <strong>me siento</strong> fatal.`,
+    verbs: [
+      {
+        verb: "tendría que haber llamado", tense: "Condicional simple + infinitivo compuesto", infinitive: "llamar",
+        forms: [["yo","tendría que haber llamado"],["tú","tendrías que haber llamado"],["él/ella","tendría que haber llamado"],["nosotros","tendríamos que haber llamado"],["vosotros","tendríais que haber llamado"],["ellos/ellas","tendrían que haber llamado"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      },
+      {
+        verb: "me siento", tense: "Presente de indicativo", infinitive: "sentirse",
+        forms: [["yo","me siento"],["tú","te sientes"],["él/ella","se siente"],["nosotros","nos sentimos"],["vosotros","os sentís"],["ellos/ellas","se sienten"]]
+      }
+    ]
+  },
+  {
+    id: "119", pattern: "P3",
+    situacion: "Pensando en una amistad perdida",
+    sentence: `Si no <strong>hubiéramos perdido</strong> el contacto, seguro que ahora <strong>seguiríamos siendo</strong> amigos.`,
+    verbs: [
+      {
+        verb: "hubiéramos perdido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "perder",
+        forms: [["yo","hubiera perdido"],["tú","hubieras perdido"],["él/ella","hubiera perdido"],["nosotros","hubiéramos perdido"],["vosotros","hubierais perdido"],["ellos/ellas","hubieran perdido"]]
+      },
+      {
+        verb: "seguiríamos siendo", tense: "Condicional simple + gerundio", infinitive: "seguir",
+        forms: [["yo","seguiría siendo"],["tú","seguirías siendo"],["él/ella","seguiría siendo"],["nosotros","seguiríamos siendo"],["vosotros","seguiríais siendo"],["ellos/ellas","seguirían siendo"]]
+      }
+    ]
+  },
+  {
+    id: "120", pattern: "P7",
+    situacion: "Prometiendo mantener la calma",
+    sentence: `Aunque me <strong>provoque</strong>, no voy a perder los nervios. No <strong>merece</strong> la pena.`,
+    verbs: [
+      {
+        verb: "provoque", tense: "Presente de subjuntivo", infinitive: "provocar",
+        forms: [["yo","provoque"],["tú","provoques"],["él/ella","provoque"],["nosotros","provoquemos"],["vosotros","provoquéis"],["ellos/ellas","provoquen"]]
+      },
+      {
+        verb: "merece", tense: "Presente de indicativo", infinitive: "merecer",
+        forms: [["yo","merezco"],["tú","mereces"],["él/ella","merece"],["nosotros","merecemos"],["vosotros","merecéis"],["ellos/ellas","merecen"]]
+      }
+    ]
+  },
+  {
+    id: "121", pattern: "P8",
+    situacion: "Una situación que se fue de las manos",
+    sentence: `<strong>Habríamos evitado</strong> todo este lío si <strong>hubiéramos pensado</strong> un poco antes de actuar.`,
+    verbs: [
+      {
+        verb: "habríamos evitado", tense: "Condicional compuesto", infinitive: "evitar",
+        forms: [["yo","habría evitado"],["tú","habrías evitado"],["él/ella","habría evitado"],["nosotros","habríamos evitado"],["vosotros","habríais evitado"],["ellos/ellas","habrían evitado"]]
+      },
+      {
+        verb: "hubiéramos pensado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "pensar",
+        forms: [["yo","hubiera pensado"],["tú","hubieras pensado"],["él/ella","hubiera pensado"],["nosotros","hubiéramos pensado"],["vosotros","hubierais pensado"],["ellos/ellas","hubieran pensado"]]
+      }
+    ]
+  },
+  {
+    id: "122", pattern: "P4",
+    situacion: "Deseando quedarte en casa",
+    sentence: `Ojalá <strong>pudiera</strong> quedarme en casa hoy. <strong>Tengo</strong> una pereza horrible de salir.`,
+    verbs: [
+      {
+        verb: "pudiera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "poder",
+        forms: [["yo","pudiera"],["tú","pudieras"],["él/ella","pudiera"],["nosotros","pudiéramos"],["vosotros","pudierais"],["ellos/ellas","pudieran"]]
+      },
+      {
+        verb: "tengo", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "123", pattern: "P2",
+    situacion: "Un susto médico",
+    sentence: `Si <strong>hubiera ido</strong> al médico antes, probablemente no <strong>habría llegado</strong> a ser tan grave.`,
+    verbs: [
+      {
+        verb: "hubiera ido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "ir",
+        forms: [["yo","hubiera ido"],["tú","hubieras ido"],["él/ella","hubiera ido"],["nosotros","hubiéramos ido"],["vosotros","hubierais ido"],["ellos/ellas","hubieran ido"]]
+      },
+      {
+        verb: "habría llegado", tense: "Condicional compuesto", infinitive: "llegar",
+        forms: [["yo","habría llegado"],["tú","habrías llegado"],["él/ella","habría llegado"],["nosotros","habríamos llegado"],["vosotros","habríais llegado"],["ellos/ellas","habrían llegado"]]
+      }
+    ]
+  },
+  {
+    id: "124", pattern: "P7",
+    situacion: "Haciendo ese viaje aunque cueste",
+    sentence: `Aunque <strong>cueste</strong> mucho, <strong>quiero</strong> hacer ese viaje. Me lo <strong>merezco</strong>.`,
+    verbs: [
+      {
+        verb: "cueste", tense: "Presente de subjuntivo", infinitive: "costar",
+        forms: [["yo","cueste"],["tú","cuestes"],["él/ella","cueste"],["nosotros","costemos"],["vosotros","costéis"],["ellos/ellas","cuesten"]]
+      },
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      },
+      {
+        verb: "me merezco", tense: "Presente de indicativo", infinitive: "merecerse",
+        forms: [["yo","me merezco"],["tú","te mereces"],["él/ella","se merece"],["nosotros","nos merecemos"],["vosotros","os merecéis"],["ellos/ellas","se merecen"]]
+      }
+    ]
+  },
+  {
+    id: "125", pattern: "P8",
+    situacion: "Tras un malentendido entre amigos",
+    sentence: `<strong>Deberíais haber aclarado</strong> eso desde el principio. Así no <strong>estaríamos</strong> en este lío ahora.`,
+    verbs: [
+      {
+        verb: "deberíais haber aclarado", tense: "Condicional simple + infinitivo compuesto", infinitive: "aclarar",
+        forms: [["yo","debería haber aclarado"],["tú","deberías haber aclarado"],["él/ella","debería haber aclarado"],["nosotros","deberíamos haber aclarado"],["vosotros","deberíais haber aclarado"],["ellos/ellas","deberían haber aclarado"]]
+      },
+      {
+        verb: "estaríamos", tense: "Condicional simple", infinitive: "estar",
+        forms: [["yo","estaría"],["tú","estarías"],["él/ella","estaría"],["nosotros","estaríamos"],["vosotros","estaríais"],["ellos/ellas","estarían"]]
+      }
+    ]
+  },
+  {
+    id: "126", pattern: "P6",
+    situacion: "Describiendo a alguien que se cree el jefe",
+    sentence: `<strong>Habla</strong> como si lo <strong>supiera</strong> todo, pero en realidad no <strong>tiene</strong> ni idea.`,
+    verbs: [
+      {
+        verb: "habla", tense: "Presente de indicativo", infinitive: "hablar",
+        forms: [["yo","hablo"],["tú","hablas"],["él/ella","habla"],["nosotros","hablamos"],["vosotros","habláis"],["ellos/ellas","hablan"]]
+      },
+      {
+        verb: "supiera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "saber",
+        forms: [["yo","supiera"],["tú","supieras"],["él/ella","supiera"],["nosotros","supiéramos"],["vosotros","supierais"],["ellos/ellas","supieran"]]
+      },
+      {
+        verb: "tiene", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "127", pattern: "P3",
+    situacion: "Pensando en otro camino de vida",
+    sentence: `Si <strong>me hubiera quedado</strong> en mi pueblo, ahora <strong>sería</strong> una persona completamente diferente.`,
+    verbs: [
+      {
+        verb: "me hubiera quedado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "quedarse",
+        forms: [["yo","me hubiera quedado"],["tú","te hubieras quedado"],["él/ella","se hubiera quedado"],["nosotros","nos hubiéramos quedado"],["vosotros","os hubierais quedado"],["ellos/ellas","se hubieran quedado"]]
+      },
+      {
+        verb: "sería", tense: "Condicional simple", infinitive: "ser",
+        forms: [["yo","sería"],["tú","serías"],["él/ella","sería"],["nosotros","seríamos"],["vosotros","seríais"],["ellos/ellas","serían"]]
+      }
+    ]
+  },
+  {
+    id: "128", pattern: "P7",
+    situacion: "Aunque no salga bien, lo intentarás",
+    sentence: `Aunque no <strong>salga</strong> bien, <strong>voy</strong> a intentarlo. No <strong>quiero</strong> arrepentirme de no haberlo intentado.`,
+    verbs: [
+      {
+        verb: "salga", tense: "Presente de subjuntivo", infinitive: "salir",
+        forms: [["yo","salga"],["tú","salgas"],["él/ella","salga"],["nosotros","salgamos"],["vosotros","salgáis"],["ellos/ellas","salgan"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      }
+    ]
+  },
+  {
+    id: "129", pattern: "P5",
+    situacion: "Lamentando cómo reaccionaste",
+    sentence: `Ojalá <strong>hubiera reaccionado</strong> de otra manera. <strong>Perdí</strong> los nervios y <strong>empeoré</strong> todo.`,
+    verbs: [
+      {
+        verb: "hubiera reaccionado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "reaccionar",
+        forms: [["yo","hubiera reaccionado"],["tú","hubieras reaccionado"],["él/ella","hubiera reaccionado"],["nosotros","hubiéramos reaccionado"],["vosotros","hubierais reaccionado"],["ellos/ellas","hubieran reaccionado"]]
+      },
+      {
+        verb: "perdí", tense: "Pretérito indefinido", infinitive: "perder",
+        forms: [["yo","perdí"],["tú","perdiste"],["él/ella","perdió"],["nosotros","perdimos"],["vosotros","perdisteis"],["ellos/ellas","perdieron"]]
+      },
+      {
+        verb: "empeoré", tense: "Pretérito indefinido", infinitive: "empeorar",
+        forms: [["yo","empeoré"],["tú","empeoraste"],["él/ella","empeoró"],["nosotros","empeoramos"],["vosotros","empeorasteis"],["ellos/ellas","empeoraron"]]
+      }
+    ]
+  },
+  {
+    id: "130", pattern: "P2",
+    situacion: "Un error en el trabajo",
+    sentence: `Si <strong>hubiéramos revisado</strong> el informe antes de enviarlo, no <strong>habríamos cometido</strong> ese error tan gordo.`,
+    verbs: [
+      {
+        verb: "hubiéramos revisado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "revisar",
+        forms: [["yo","hubiera revisado"],["tú","hubieras revisado"],["él/ella","hubiera revisado"],["nosotros","hubiéramos revisado"],["vosotros","hubierais revisado"],["ellos/ellas","hubieran revisado"]]
+      },
+      {
+        verb: "habríamos cometido", tense: "Condicional compuesto", infinitive: "cometer",
+        forms: [["yo","habría cometido"],["tú","habrías cometido"],["él/ella","habría cometido"],["nosotros","habríamos cometido"],["vosotros","habríais cometido"],["ellos/ellas","habrían cometido"]]
+      }
+    ]
+  },
+  {
+    id: "131", pattern: "P8",
+    situacion: "Lamentando no haberte cuidado más",
+    sentence: `Habría que haber descansado más en lugar de trabajar tanto ese año. El cuerpo te <strong>pasa</strong> factura.`,
+    verbs: [
+      {
+        verb: "habría que haber descansado", tense: "Condicional compuesto + infinitivo compuesto (impersonal)", infinitive: "descansar",
+        note: "Construcción impersonal. No se conjuga en persona.",
+        forms: [["(impersonal)","habría que haber descansado"]]
+      },
+      {
+        verb: "pasa", tense: "Presente de indicativo", infinitive: "pasar",
+        forms: [["yo","paso"],["tú","pasas"],["él/ella","pasa"],["nosotros","pasamos"],["vosotros","pasáis"],["ellos/ellas","pasan"]]
+      }
+    ]
+  },
+  {
+    id: "132", pattern: "P7",
+    situacion: "Manteniendo tu posición",
+    sentence: `Aunque todo el mundo <strong>opine</strong> lo contrario, <strong>creo</strong> que <strong>tenemos</strong> razón.`,
+    verbs: [
+      {
+        verb: "opine", tense: "Presente de subjuntivo", infinitive: "opinar",
+        forms: [["yo","opine"],["tú","opines"],["él/ella","opine"],["nosotros","opinemos"],["vosotros","opinéis"],["ellos/ellas","opinen"]]
+      },
+      {
+        verb: "creo", tense: "Presente de indicativo", infinitive: "creer",
+        forms: [["yo","creo"],["tú","crees"],["él/ella","cree"],["nosotros","creemos"],["vosotros","creéis"],["ellos/ellas","creen"]]
+      },
+      {
+        verb: "tenemos", tense: "Presente de indicativo", infinitive: "tener",
+        forms: [["yo","tengo"],["tú","tienes"],["él/ella","tiene"],["nosotros","tenemos"],["vosotros","tenéis"],["ellos/ellas","tienen"]]
+      }
+    ]
+  },
+  {
+    id: "133", pattern: "P3",
+    situacion: "Reflexionando sobre dejar de fumar",
+    sentence: `Si <strong>hubiera dejado</strong> de fumar antes, ahora <strong>me encontraría</strong> mucho mejor.`,
+    verbs: [
+      {
+        verb: "hubiera dejado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "dejar",
+        forms: [["yo","hubiera dejado"],["tú","hubieras dejado"],["él/ella","hubiera dejado"],["nosotros","hubiéramos dejado"],["vosotros","hubierais dejado"],["ellos/ellas","hubieran dejado"]]
+      },
+      {
+        verb: "me encontraría", tense: "Condicional simple", infinitive: "encontrarse",
+        forms: [["yo","me encontraría"],["tú","te encontrarías"],["él/ella","se encontraría"],["nosotros","nos encontraríamos"],["vosotros","os encontraríais"],["ellos/ellas","se encontrarían"]]
+      }
+    ]
+  },
+  {
+    id: "134", pattern: "P8",
+    situacion: "Llegando tarde a una quedada",
+    sentence: `Lo siento, <strong>debería haber salido</strong> antes de casa. Es que no <strong>calculé</strong> bien el tiempo.`,
+    verbs: [
+      {
+        verb: "debería haber salido", tense: "Condicional simple + infinitivo compuesto", infinitive: "salir",
+        forms: [["yo","debería haber salido"],["tú","deberías haber salido"],["él/ella","debería haber salido"],["nosotros","deberíamos haber salido"],["vosotros","deberíais haber salido"],["ellos/ellas","deberían haber salido"]]
+      },
+      {
+        verb: "calculé", tense: "Pretérito indefinido", infinitive: "calcular",
+        forms: [["yo","calculé"],["tú","calculaste"],["él/ella","calculó"],["nosotros","calculamos"],["vosotros","calculasteis"],["ellos/ellas","calcularon"]]
+      }
+    ]
+  },
+  {
+    id: "135", pattern: "P2",
+    situacion: "Lamentando una compra impulsiva",
+    sentence: `Si <strong>hubiera pensado</strong> más antes de comprarlo, no <strong>habría gastado</strong> tanto dinero en algo que ni uso.`,
+    verbs: [
+      {
+        verb: "hubiera pensado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "pensar",
+        forms: [["yo","hubiera pensado"],["tú","hubieras pensado"],["él/ella","hubiera pensado"],["nosotros","hubiéramos pensado"],["vosotros","hubierais pensado"],["ellos/ellas","hubieran pensado"]]
+      },
+      {
+        verb: "habría gastado", tense: "Condicional compuesto", infinitive: "gastar",
+        forms: [["yo","habría gastado"],["tú","habrías gastado"],["él/ella","habría gastado"],["nosotros","habríamos gastado"],["vosotros","habríais gastado"],["ellos/ellas","habrían gastado"]]
+      }
+    ]
+  },
+  {
+    id: "136", pattern: "P7",
+    situacion: "Una amistad a distancia",
+    sentence: `Aunque no nos <strong>veamos</strong> mucho, <strong>sé</strong> que <strong>somos</strong> amigos de verdad.`,
+    verbs: [
+      {
+        verb: "veamos", tense: "Presente de subjuntivo", infinitive: "verse",
+        forms: [["yo","me vea"],["tú","te veas"],["él/ella","se vea"],["nosotros","nos veamos"],["vosotros","os veáis"],["ellos/ellas","se vean"]]
+      },
+      {
+        verb: "sé", tense: "Presente de indicativo", infinitive: "saber",
+        forms: [["yo","sé"],["tú","sabes"],["él/ella","sabe"],["nosotros","sabemos"],["vosotros","sabéis"],["ellos/ellas","saben"]]
+      },
+      {
+        verb: "somos", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "137", pattern: "P3",
+    situacion: "Cómo sería tu vida ahora si hubieras viajado más",
+    sentence: `Si <strong>hubiera viajado</strong> más de joven, ahora <strong>sería</strong> una persona mucho más abierta de mente.`,
+    verbs: [
+      {
+        verb: "hubiera viajado", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "viajar",
+        forms: [["yo","hubiera viajado"],["tú","hubieras viajado"],["él/ella","hubiera viajado"],["nosotros","hubiéramos viajado"],["vosotros","hubierais viajado"],["ellos/ellas","hubieran viajado"]]
+      },
+      {
+        verb: "sería", tense: "Condicional simple", infinitive: "ser",
+        forms: [["yo","sería"],["tú","serías"],["él/ella","sería"],["nosotros","seríamos"],["vosotros","seríais"],["ellos/ellas","serían"]]
+      }
+    ]
+  },
+  {
+    id: "138", pattern: "P6",
+    situacion: "Describiendo a alguien que se comporta como el jefe",
+    sentence: `<strong>Se comporta</strong> como si <strong>fuera</strong> el jefe, y <strong>lleva</strong> aquí tres meses.`,
+    verbs: [
+      {
+        verb: "se comporta", tense: "Presente de indicativo", infinitive: "comportarse",
+        forms: [["yo","me comporto"],["tú","te comportas"],["él/ella","se comporta"],["nosotros","nos comportamos"],["vosotros","os comportáis"],["ellos/ellas","se comportan"]]
+      },
+      {
+        verb: "fuera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "ser",
+        forms: [["yo","fuera"],["tú","fueras"],["él/ella","fuera"],["nosotros","fuéramos"],["vosotros","fuerais"],["ellos/ellas","fueran"]]
+      },
+      {
+        verb: "lleva", tense: "Presente de indicativo", infinitive: "llevar",
+        forms: [["yo","llevo"],["tú","llevas"],["él/ella","lleva"],["nosotros","llevamos"],["vosotros","lleváis"],["ellos/ellas","llevan"]]
+      }
+    ]
+  },
+  {
+    id: "139", pattern: "P8",
+    situacion: "Tras una conversación que tardó demasiado en tenerse",
+    sentence: `<strong>Deberíamos haber hablado</strong> de esto mucho antes. <strong>Habríamos ahorrado</strong> mucho mal rollo.`,
+    verbs: [
+      {
+        verb: "deberíamos haber hablado", tense: "Condicional simple + infinitivo compuesto", infinitive: "hablar",
+        forms: [["yo","debería haber hablado"],["tú","deberías haber hablado"],["él/ella","debería haber hablado"],["nosotros","deberíamos haber hablado"],["vosotros","deberíais haber hablado"],["ellos/ellas","deberían haber hablado"]]
+      },
+      {
+        verb: "habríamos ahorrado", tense: "Condicional compuesto", infinitive: "ahorrar",
+        forms: [["yo","habría ahorrado"],["tú","habrías ahorrado"],["él/ella","habría ahorrado"],["nosotros","habríamos ahorrado"],["vosotros","habríais ahorrado"],["ellos/ellas","habrían ahorrado"]]
+      }
+    ]
+  },
+  {
+    id: "140", pattern: "P1",
+    situacion: "Imaginando vivir más cerca del trabajo",
+    sentence: `Si <strong>viviera</strong> más cerca del trabajo, <strong>podría</strong> ir andando y no <strong>tendría</strong> que coger el metro.`,
+    verbs: [
+      {
+        verb: "viviera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "vivir",
+        forms: [["yo","viviera"],["tú","vivieras"],["él/ella","viviera"],["nosotros","viviéramos"],["vosotros","vivierais"],["ellos/ellas","vivieran"]]
+      },
+      {
+        verb: "podría", tense: "Condicional simple", infinitive: "poder",
+        forms: [["yo","podría"],["tú","podrías"],["él/ella","podría"],["nosotros","podríamos"],["vosotros","podríais"],["ellos/ellas","podrían"]]
+      },
+      {
+        verb: "tendría", tense: "Condicional simple", infinitive: "tener",
+        forms: [["yo","tendría"],["tú","tendrías"],["él/ella","tendría"],["nosotros","tendríamos"],["vosotros","tendríais"],["ellos/ellas","tendrían"]]
+      }
+    ]
+  },
+  {
+    id: "141", pattern: "P7",
+    situacion: "Terminando el informe aunque estés agotado",
+    sentence: `Aunque <strong>esté</strong> agotado, <strong>voy</strong> a terminar este informe esta noche. <strong>Es</strong> para mañana.`,
+    verbs: [
+      {
+        verb: "esté", tense: "Presente de subjuntivo", infinitive: "estar",
+        forms: [["yo","esté"],["tú","estés"],["él/ella","esté"],["nosotros","estemos"],["vosotros","estéis"],["ellos/ellas","estén"]]
+      },
+      {
+        verb: "voy", tense: "Presente de indicativo", infinitive: "ir",
+        forms: [["yo","voy"],["tú","vas"],["él/ella","va"],["nosotros","vamos"],["vosotros","vais"],["ellos/ellas","van"]]
+      },
+      {
+        verb: "es", tense: "Presente de indicativo", infinitive: "ser",
+        forms: [["yo","soy"],["tú","eres"],["él/ella","es"],["nosotros","somos"],["vosotros","sois"],["ellos/ellas","son"]]
+      }
+    ]
+  },
+  {
+    id: "142", pattern: "P2",
+    situacion: "Reflexionando sobre una discusión",
+    sentence: `Si no <strong>hubiera dicho</strong> lo que dije, probablemente no <strong>habría acabado</strong> tan mal la noche.`,
+    verbs: [
+      {
+        verb: "hubiera dicho", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "decir",
+        forms: [["yo","hubiera dicho"],["tú","hubieras dicho"],["él/ella","hubiera dicho"],["nosotros","hubiéramos dicho"],["vosotros","hubierais dicho"],["ellos/ellas","hubieran dicho"]]
+      },
+      {
+        verb: "habría acabado", tense: "Condicional compuesto", infinitive: "acabar",
+        forms: [["yo","habría acabado"],["tú","habrías acabado"],["él/ella","habría acabado"],["nosotros","habríamos acabado"],["vosotros","habríais acabado"],["ellos/ellas","habrían acabado"]]
+      }
+    ]
+  },
+  {
+    id: "143", pattern: "P4",
+    situacion: "Ojalá el día tuviera más horas",
+    sentence: `Ojalá <strong>tuviera</strong> el día más horas. Nunca me <strong>da</strong> tiempo a hacer todo lo que <strong>quiero</strong>.`,
+    verbs: [
+      {
+        verb: "tuviera", tense: "Pretérito imperfecto de subjuntivo (-ra)", infinitive: "tener",
+        forms: [["yo","tuviera"],["tú","tuvieras"],["él/ella","tuviera"],["nosotros","tuviéramos"],["vosotros","tuvierais"],["ellos/ellas","tuvieran"]]
+      },
+      {
+        verb: "da", tense: "Presente de indicativo", infinitive: "dar",
+        forms: [["yo","doy"],["tú","das"],["él/ella","da"],["nosotros","damos"],["vosotros","dais"],["ellos/ellas","dan"]]
+      },
+      {
+        verb: "quiero", tense: "Presente de indicativo", infinitive: "querer",
+        forms: [["yo","quiero"],["tú","quieres"],["él/ella","quiere"],["nosotros","queremos"],["vosotros","queréis"],["ellos/ellas","quieren"]]
+      }
+    ]
+  },
+  {
+    id: "144", pattern: "P3",
+    situacion: "Una oportunidad laboral perdida",
+    sentence: `Si <strong>hubiera pedido</strong> ese ascenso cuando tocaba, ahora <strong>estaría</strong> en una posición muy diferente.`,
+    verbs: [
+      {
+        verb: "hubiera pedido", tense: "Pretérito pluscuamperfecto de subjuntivo", infinitive: "pedir",
+        forms: [["yo","hubiera pedido"],["tú","hubieras pedido"],["él/ella","hubiera pedido"],["nosotros","hubiéramos pedido"],["vosotros","hubierais pedido"],["ellos/ellas","hubieran pedido"]]
+      },
+      {
+        verb: "estaría", tense: "Condicional simple", infinitive: "estar",
+        forms: [["yo","estaría"],["tú","estarías"],["él/ella","estaría"],["nosotros","estaríamos"],["vosotros","estaríais"],["ellos/ellas","estarían"]]
+      }
+    ]
+  },
+  {
+    id: "145", pattern: "P8",
+    situacion: "Quemando la cena",
+    sentence: `<strong>Tendría que haber puesto</strong> el temporizador. <strong>Estaba</strong> tan distraída que <strong>se me olvidó</strong> por completo.`,
+    verbs: [
+      {
+        verb: "tendría que haber puesto", tense: "Condicional simple + infinitivo compuesto", infinitive: "poner",
+        forms: [["yo","tendría que haber puesto"],["tú","tendrías que haber puesto"],["él/ella","tendría que haber puesto"],["nosotros","tendríamos que haber puesto"],["vosotros","tendríais que haber puesto"],["ellos/ellas","tendrían que haber puesto"]]
+      },
+      {
+        verb: "estaba", tense: "Pretérito imperfecto de indicativo", infinitive: "estar",
+        forms: [["yo","estaba"],["tú","estabas"],["él/ella","estaba"],["nosotros","estábamos"],["vosotros","estabais"],["ellos/ellas","estaban"]]
+      },
+      {
+        verb: "se me olvidó", tense: "Pretérito indefinido (construcción accidental con se)", infinitive: "olvidársele a uno",
+        note: "Construcción accidental con se: el sujeto gramatical es lo olvidado, no la persona.",
+        forms: [["a mí","se me olvidó"],["a ti","se te olvidó"],["a él/ella","se le olvidó"],["a nosotros","se nos olvidó"],["a vosotros","se os olvidó"],["a ellos/ellas","se les olvidó"]]
+      }
+    ]
+  }
+];
+
+// ── RENDER ──
+function buildConjTable(forms) {
+  if (!forms || forms.length === 0) return '';
+  return `<div class="conj-table">${forms.map(([p,f]) =>
+    `<div class="conj-cell"><span class="pronoun">${p}</span><span class="form">${f}</span></div>`
+  ).join('')}</div>`;
+}
+
+function renderFragment(f) {
+  const patternBadge = f.pattern ? `<span class="pattern-badge">${f.pattern}</span>` : '';
+  const verbBlocks = f.verbs.map(v => {
+    const table = buildConjTable(v.forms);
+    const note = v.note ? `<div class="conj-note">※ ${v.note}</div>` : '';
+    return `<div class="conj-block">
+      <div class="conj-header">
+        <span class="verb-name">${v.verb}</span>
+        <span class="tense-name">${v.tense}</span>
+      </div>
+      ${table}${note}
+    </div>`;
+  }).join('');
+
+  return `<div class="fragment" id="frag-${f.id}" data-pattern="${(f.pattern||'').toLowerCase()}">
+    <div class="fragment-header">
+      <span class="frag-num">${f.id}</span>
+      <span class="situacion-tag">situación · ${f.situacion}</span>
+      ${patternBadge}
+    </div>
+    <div class="fragment-sentence">${f.sentence}</div>
+    <div class="conjugations">${verbBlocks}</div>
+    <div class="reveal-btn" onclick="revealConj(this)">Mostrar conjugaciones</div>
+  </div>`;
+}
+
+function revealConj(btn) {
+  const frag = btn.closest('.fragment');
+  frag.querySelector('.conjugations').style.display = 'block';
+  btn.style.display = 'none';
+}
+
+function buildNavItem(f, hidden) {
+  const preview = f.sentence.replace(/<[^>]+>/g,'').slice(0,34) + '…';
+  const badge = f.pattern ? `<span class="nav-tag">${f.pattern}</span>` : '';
+  return `<div class="nav-item${hidden?' hidden':''}" data-id="${f.id}" data-pattern="${(f.pattern||'').toLowerCase()}" onclick="scrollTo('${f.id}')">
+    <span class="nav-num">${f.id}</span>
+    <span class="nav-preview">${preview}</span>
+    ${badge}
+  </div>`;
+}
+
+// Initial render
+const container = document.getElementById('fragments-container');
+const navList = document.getElementById('nav-list');
+container.innerHTML = FRAGS.map(renderFragment).join('');
+navList.innerHTML = FRAGS.map(f => buildNavItem(f, false)).join('');
+updateCounter();
+
+// ── SCROLL TO ──
+function scrollTo(id) {
+  const el = document.getElementById('frag-'+id);
+  if (el) {
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navEl = document.querySelector(`.nav-item[data-id="${id}"]`);
+    if (navEl) navEl.classList.add('active');
+  }
+}
+
+// Highlight nav on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id.replace('frag-','');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const navEl = document.querySelector(`.nav-item[data-id="${id}"]`);
+      if (navEl) {
+        navEl.classList.add('active');
+        navEl.scrollIntoView({block:'nearest'});
+      }
+    }
+  });
+}, {threshold: 0.3});
+document.querySelectorAll('.fragment').forEach(f => observer.observe(f));
+
+// ── SIDEBAR TOGGLE (mobile) ──
+function toggleSidebar() {
+  document.body.classList.toggle('sidebar-open');
+}
+function closeSidebar() {
+  document.body.classList.remove('sidebar-open');
+}
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', closeSidebar);
+});
+
+// ── TOGGLE CONJUGATIONS ──
+let conjVisible = true;
+function toggleConjugations() {
+  conjVisible = !conjVisible;
+  document.body.classList.toggle('conjugations-hidden', !conjVisible);
+  const label = conjVisible ? 'Ocultar conjugaciones' : 'Mostrar conjugaciones';
+  document.getElementById('toggle-btn').textContent = label;
+  document.getElementById('toggle-btn').classList.toggle('hidden-mode', !conjVisible);
+  const mob = document.getElementById('toggle-btn-mobile');
+  mob.setAttribute('aria-label', label);
+  mob.classList.toggle('hidden-mode', !conjVisible);
+  const eyeOpen = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const eyeOff = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+  mob.innerHTML = conjVisible ? eyeOpen : eyeOff;
+  if (conjVisible) {
+    document.querySelectorAll('.conjugations').forEach(c => c.style.display = '');
+    document.querySelectorAll('.reveal-btn').forEach(b => b.style.display = 'none');
+  }
+}
+
+// ── SEARCH ──
+document.getElementById('search').addEventListener('input', function() {
+  filterFragments();
+});
+
+// ── FILTERS ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    filterFragments();
+  });
+});
+
+function filterFragments() {
+  const query = document.getElementById('search').value.toLowerCase().trim();
+  const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+
+  let visible = 0;
+  FRAGS.forEach(f => {
+    const fragEl = document.getElementById('frag-'+f.id);
+    const navEl = document.querySelector(`.nav-item[data-id="${f.id}"]`);
+    const pattern = (f.pattern||'').toLowerCase();
+
+    const matchesFilter = activeFilter === 'all' || pattern === activeFilter;
+    const searchTarget = (f.situacion + ' ' + f.sentence + ' ' + f.verbs.map(v=>v.verb+' '+v.infinitive).join(' ')).toLowerCase().replace(/<[^>]+>/g,'');
+    const matchesSearch = !query || searchTarget.includes(query);
+
+    const show = matchesFilter && matchesSearch;
+    fragEl.style.display = show ? '' : 'none';
+    if (navEl) navEl.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  updateCounter();
+}
+
+function updateCounter() {
+  const visible = document.querySelectorAll('.fragment:not([style*="display: none"])').length;
+  document.getElementById('counter').textContent = `${visible} fragmento${visible !== 1 ? 's' : ''} visible${visible !== 1 ? 's' : ''}`;
+}
+</script>
+</body>
+</html>
